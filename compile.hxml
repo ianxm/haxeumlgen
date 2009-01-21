@@ -1,0 +1,4 @@
+# build and run tests
+-main umlgen.TestSuite
+-neko ../bin/tests.n
+-cmd neko ../bin/tests.n

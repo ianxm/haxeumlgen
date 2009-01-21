@@ -3,7 +3,8 @@ package umlgen.model;
 /**
 	superclass for types that contain fields
  **/
-interface ComplexType extends ModelType
+interface ComplexType implements ModelType
 {
-  private var fields : List<FieldModel>;
+  private var pkg : String;
+  private var name : String;
 }

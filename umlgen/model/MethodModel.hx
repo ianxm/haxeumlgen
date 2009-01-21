@@ -8,13 +8,11 @@ class MethodModel implements SimpleType
   private var params : List<ParamModel>;
   private var isStatic : Bool;
   private var protection : String;
-  public var doesOverride(default,null) : Bool;
   public var name(default,null) : String;
   public var type(default,null) : String;
 
-  public function new(o, s, p, n, t)
+  public function new(s, p, n, t)
   {
-    doesOverride = o;
     isStatic = s;
     name = n;
     type = t;

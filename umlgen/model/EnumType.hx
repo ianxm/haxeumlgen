@@ -5,7 +5,7 @@ package umlgen.model;
  **/
 class EnumModel implements ComplexType
 {
-  overrides public function getDot() : String
+  public function getDotStr() : String
   {
     return "";
   }

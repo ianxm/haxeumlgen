@@ -6,19 +6,19 @@ package umlgen.model;
 class MethodModel implements SimpleType
 {
   private var params : List<ParamModel>;
-  private var doesOverride : Bool;
   private var isStatic : Bool;
   private var protection : String;
+  public var doesOverride(default,null) : Bool;
   public var name(default,null) : String;
   public var type(default,null) : String;
 
-  public function new(o, s, p, n, ps, t)
+  public function new(o, s, p, n, t)
   {
     doesOverride = o;
     isStatic = s;
     name = n;
     type = t;
-    params = new List<ParamMode>();
+    params = new List<ParamModel>();
 
     protection =
       switch (p)
@@ -40,7 +40,7 @@ class MethodModel implements SimpleType
   /**
 	output this type as a dot string
    **/
-  public function getDotStr() : string
+  public function getDotStr() : String
   {
     return protection + " " + name + "(" + getParamsDotStr() + ") : " + type + "\\l";
   }
@@ -48,14 +48,14 @@ class MethodModel implements SimpleType
   /**
 	output the params as a dot string
    **/
-  private function getParamsDotStr() : string
+  private function getParamsDotStr() : String
   {
-    var strbuf = new stringbuf();
+    var strBuf = new StringBuf();
     for( pp in params )
       if( pp != params.last() )
-	endstrbuf.add(pp.getdot() + ",");
+	strBuf.add(pp.getDotStr() + ", ");
       else
-	endstrBuf.add(pp.getDot());
+	strBuf.add(pp.getDotStr());
 
     return strBuf.toString();
   }

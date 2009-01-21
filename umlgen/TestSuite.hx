@@ -8,6 +8,7 @@ class TestSuite
 
     r.add(new umlgen.model.TestParam());
     r.add(new umlgen.model.TestField());
+    r.add(new umlgen.model.TestMethod());
 
     r.run();
   }

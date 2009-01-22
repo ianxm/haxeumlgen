@@ -41,6 +41,8 @@ class HaxeUmlGen
   public static function readXml()
   {
     classes = new List<ComplexType>();
+    var fData = neko.io.File.getContent(inFname);
+    var xmlData = Xml.parse(str).firstElement();
   }
 
   /**

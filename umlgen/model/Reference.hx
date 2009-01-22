@@ -3,7 +3,7 @@ package umlgen.model;
 class Reference
 {
   /** package and type, for functions this is the return type **/
-  private var type : String;
+  public var type(default,default) : String;
 
   /** variable name **/
   private var name : String;

@@ -5,7 +5,6 @@ package umlgen.model;
  **/
 interface ModelType
 {
-  private var pkg : String;
-  private var name : String;
+  public var path(default,null) : String;
   public function getDotStr() : String;
 }

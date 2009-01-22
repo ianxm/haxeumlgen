@@ -3,7 +3,7 @@ package umlgen;
 import umlgen.model.ModelType;
 import umlgen.model.EnumModel;
 import umlgen.model.TypedefModel;
-import umlgen.model.ParamModel;
+import umlgen.model.Reference;
 
 /**
 	The haxe uml generator dynamically creates class diagrams for haxe projects.
@@ -17,7 +17,7 @@ class HaxeUmlGen
   private var outFname : String;
 
   /** list of data types **/
-  private var dataTypes : List<ModelType>;
+  private var dataTypes : Hash<ModelType>;
 
   /**
 	this is the main function.
@@ -53,12 +53,12 @@ class HaxeUmlGen
    **/
   private function readXml()
   {
-    dataTypes = new List<ModelType>();
+    dataTypes = new Hash<ModelType>();
     var fData = neko.io.File.getContent(inFname);
     var xmlData = Xml.parse(fData).firstElement();
     for( nn in xmlData.elements() )
     {
-      var builder : Xml -> ComplexType = null;
+      var builder : Xml -> ModelType = null;
       switch( nn.nodeName )
       {
       case "enum": builder = buildEnum;
@@ -69,7 +69,7 @@ class HaxeUmlGen
 
       var ret = builder(nn);
       if( ret != null )
-	dataTypes.add(ret);
+	dataTypes.set(ret.path, ret);
 
       neko.Lib.println("element: " + nn.nodeName + " " + nn.get("path"));
     }
@@ -78,11 +78,12 @@ class HaxeUmlGen
   private function buildEnum(xmlNode:Xml)
   {
     var path = xmlNode.get("path");
+    /*
     var sep = path.lastIndexOf(".");
     var pkg  = (sep==-1) ? "" : path.substr(0, sep);
     var name = (sep==-1) ? path : path.substr(sep+1, path.length-sep-1);
-
-    var e = new EnumModel(pkg, name);
+    */
+    var e = new EnumModel(path);
     for( ee in xmlNode.elements() )
       if( ee.nodeName != "haxe_doc" )
 	e.addField(ee.nodeName);
@@ -98,17 +99,46 @@ class HaxeUmlGen
       return null;
 
     var path = xmlNode.get("path");
+    /*
     var sep = path.lastIndexOf(".");
     var pkg  = (sep==-1) ? "" : path.substr(0, sep);
     var name = (sep==-1) ? path : path.substr(sep+1, path.length-sep-1);
-
-    var t = new TypedefModel(pkg, name);
+    */
+    var t = new TypedefModel(path);
     for( ee in xmlNode.elementsNamed("a").next().elements() )
       if( ee.nodeName != "haxe_doc" )
-	t.addField(new ParamModel(ee.nodeName, ee.elements().next().get("path")));
+	t.addField(buildReference(ee, ee.nodeName));
 
     trace("typedef: " + Std.string(t));
     return t;
+  }
+
+  private function buildReference(node:Xml, name)
+  {
+    var sub = node.elements().next();
+    switch( sub.nodeName )
+    {
+    case "e": return new Reference(name, sub.get("path"));
+    case "c": return new Reference(name, sub.get("path")); // TODO get optional parameter
+    case "f": return buildFuncRef(sub, name);
+    }
+    return null;
+  }
+
+  private function buildFuncRef(node:Xml, name)
+  {
+    var ref = new Reference(name, null, true);
+    var pnames = node.get("a").split(":").iterator();
+    var params = node.elements();
+    while( pnames.hasNext() )
+    {
+      var pname = pnames.next();
+      if( pname=="" ) break;
+      var ptype = params.next().get("path");
+      ref.addParam(new Reference(pname, ptype));
+    }
+    ref.type = params.next().get("path"); // set return type
+    return ref;
   }
 
   /**

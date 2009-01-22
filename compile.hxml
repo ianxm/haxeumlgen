@@ -3,8 +3,8 @@
 -neko ../bin/tests.n
 -cmd neko ../bin/tests.n
 
-#--next
+--next
 
 # build app
-#-main umlgen.HaxeUmlGen
-#-neko ../bin/umlgen.n
+-main umlgen.HaxeUmlGen
+-neko ../bin/umlgen.n

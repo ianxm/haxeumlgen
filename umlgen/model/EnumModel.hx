@@ -5,14 +5,12 @@ package umlgen.model;
  **/
 class EnumModel implements ModelType
 {
-  private var pkg : String;
-  private var name : String;
+  public var path(default,null) : String;
   private var fields : List<String>;
 
-  public function new(p, n)
+  public function new(p)
   {
-    pkg = p;
-    name = n;
+    path = p;
     fields = new List<String>();
   }
 
@@ -29,7 +27,7 @@ class EnumModel implements ModelType
    **/
   public function getDotStr() : String
   {
-    return " " + name + " [ label = \"{" + name + "|" + getFieldsDotStr() + "}\" ]";
+    return " " + path + " [ label = \"{" + path + "|" + getFieldsDotStr() + "}\" ]";
   }
 
   /**
@@ -42,10 +40,5 @@ class EnumModel implements ModelType
       strBuf.add(ff + "\\l");
 
     return strBuf.toString();
-  }
-
-  private function getPath() : String
-  {
-    return (pkg=="") ? name : pkg + "." + name;
   }
 }

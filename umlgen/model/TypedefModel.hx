@@ -5,14 +5,12 @@ package umlgen.model;
  **/
 class TypedefModel implements ModelType
 {
-  private var pkg : String;
-  private var name : String;
+  public var path(default,null) : String;
   private var fields : List<Reference>;
 
-  public function new(p, n)
+  public function new(p)
   {
-    pkg = p;
-    name = n;
+    path = p;
     fields = new List<Reference>();
   }
 
@@ -29,7 +27,7 @@ class TypedefModel implements ModelType
    **/
   public function getDotStr() : String
   {
-    return " " + name + " [ label = \"{" + name + "|" + getFields() + "}\" ]";
+    return " " + path + " [ label = \"{" + path + "|" + getFields() + "}\" ]";
   }
 
   /**

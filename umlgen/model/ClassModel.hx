@@ -5,8 +5,7 @@ package umlgen.model;
  **/
 class ClassModel implements ModelType
 {
-  private var pkg : String;
-  private var name : String;
+  public var path(default,null) : String;
 
   /** this contains fields and methods **/
   private var fields : List<Reference>;
@@ -14,10 +13,9 @@ class ClassModel implements ModelType
   private var parents : List<Reference>;
   private var children : List<Reference>;
 
-  public function new(p, n)
+  public function new(p)
   {
-    pkg = p;
-    name = n;
+    path = p;
     fields = new List<Reference>();
     parents = new List<Reference>();
     children = new List<Reference>();
@@ -43,7 +41,7 @@ class ClassModel implements ModelType
 
   public function getDotStr() : String
   {
-    return " " + name + " [ label = \"{" + name + "|" + getFieldsDotStr() + "|" 
+    return " " + path + " [ label = \"{" + path + "|" + getFieldsDotStr() + "|" 
       + getMethodsDotStr() + "}\" ]";
   }
 

@@ -3,53 +3,44 @@ package umlgen.model;
 /**
 	a class
  **/
-class ClassModel implements ComplexType
+class ClassModel implements ModelType
 {
   private var pkg : String;
   private var name : String;
-  private var fields : List<FieldModel>;
-  private var methods : List<MethodModel>;
-  private var parents : List<ClassModel>;
-  private var children : List<ClassModel>;
-  private var associations : List<ComplexType>;
+  private var fields : List<Reference>;
+  private var methods : List<Reference>;
+  private var parents : List<Reference>;
+  private var children : List<Reference>;
 
   public function new(p, n)
   {
     pkg = p;
     name = n;
-    methods = new List<MethodModel>();
-    fields = new List<FieldModel>();
-    parents = new List<ClassModel>();
-    children = new List<ClassModel>();
-    associations = new List<ComplexType>();
+    methods = new List<Reference>();
+    fields = new List<Reference>();
+    parents = new List<Reference>();
+    children = new List<Reference>();
   }
 
+  /**	add a super class   **/
   public function addParent(p)
   {
     parents.add(p);
   }
 
+  /**	add a subclass   **/
   public function addChild(c)
   {
     children.add(c);
   }
 
-  public function addAssociation(a)
-  {
-    associations.add(a);
-  }
-
-  /**
-	add a field
-   **/
+  /**	add a field   **/
   public function addField(f)
   {
     fields.add(f);
   }
 
-  /**
-	add a method
-   **/
+  /**	add a method   **/
   public function addMethod(m)
   {
     methods.add(m);

@@ -3,17 +3,17 @@ package umlgen.model;
 /**
 	an enum
  **/
-class TypedefModel implements ComplexType
+class TypedefModel implements ModelType
 {
   private var pkg : String;
   private var name : String;
-  private var fields : List<ParamModel>;
+  private var fields : List<Reference>;
 
   public function new(p, n)
   {
     pkg = p;
     name = n;
-    fields = new List<ParamModel>();
+    fields = new List<Reference>();
   }
 
   /**

@@ -3,7 +3,7 @@ package umlgen.model;
 /**
 	an enum
  **/
-class EnumModel implements ComplexType
+class EnumModel implements ModelType
 {
   private var pkg : String;
   private var name : String;
@@ -42,5 +42,10 @@ class EnumModel implements ComplexType
       strBuf.add(ff + "\\l");
 
     return strBuf.toString();
+  }
+
+  private function getPath() : String
+  {
+    return (pkg=="") ? name : pkg + "." + name;
   }
 }

@@ -7,8 +7,10 @@ class ClassModel implements ModelType
 {
   private var pkg : String;
   private var name : String;
+
+  /** this contains fields and methods **/
   private var fields : List<Reference>;
-  private var methods : List<Reference>;
+
   private var parents : List<Reference>;
   private var children : List<Reference>;
 
@@ -16,7 +18,6 @@ class ClassModel implements ModelType
   {
     pkg = p;
     name = n;
-    methods = new List<Reference>();
     fields = new List<Reference>();
     parents = new List<Reference>();
     children = new List<Reference>();
@@ -40,12 +41,6 @@ class ClassModel implements ModelType
     fields.add(f);
   }
 
-  /**	add a method   **/
-  public function addMethod(m)
-  {
-    methods.add(m);
-  }
-
   public function getDotStr() : String
   {
     return " " + name + " [ label = \"{" + name + "|" + getFieldsDotStr() + "|" 
@@ -58,8 +53,8 @@ class ClassModel implements ModelType
   private function getFieldsDotStr() : String
   {
     var strBuf = new StringBuf();
-    for( ff in fields )
-      strBuf.add(ff.getDotStr());
+    for( ff in fields.filter(function(ii) { return !ii.isFunc; }) )
+      strBuf.add(ff.getFieldStr());
 
     return strBuf.toString();
   }
@@ -70,8 +65,8 @@ class ClassModel implements ModelType
   private function getMethodsDotStr() : String
   {
     var strBuf = new StringBuf();
-    for( mm in methods )
-      strBuf.add(mm.getDotStr());
+    for( mm in fields.filter(function(ii) { return ii.isFunc; }) )
+      strBuf.add(mm.getFieldStr());
 
     return strBuf.toString();
   }

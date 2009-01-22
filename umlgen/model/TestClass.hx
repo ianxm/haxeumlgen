@@ -11,7 +11,7 @@ class TestClass extends haxe.unit.TestCase
   public function testClassOneField()
   {
     var testClass = new ClassModel("the.pkg", "AClass");
-    testClass.addField(new FieldModel(false, "private", "aField", "Int"));
+    testClass.addField(new Reference("aField", "Int", false, false, "private"));
     var check = ' AClass [ label = "{AClass|- aField : Int\\l|}" ]';
     assertEquals(check, testClass.getDotStr());
   }
@@ -19,8 +19,8 @@ class TestClass extends haxe.unit.TestCase
   public function testClassTwoFields()
   {
     var testClass = new ClassModel("the.pkg", "AClass");
-    testClass.addField(new FieldModel(false, "private", "aField1", "Int"));
-    testClass.addField(new FieldModel(false, "public", "aField2", "String"));
+    testClass.addField(new Reference("aField1", "Int", false, false, "private"));
+    testClass.addField(new Reference("aField2", "String", false, false, "public"));
     var check = ' AClass [ label = "{AClass|- aField1 : Int\\l+ aField2 : String\\l|}" ]';
     assertEquals(check, testClass.getDotStr());
   }
@@ -28,7 +28,7 @@ class TestClass extends haxe.unit.TestCase
   public function testClassOneMethod()
   {
     var testClass = new ClassModel("the.pkg", "AClass");
-    testClass.addMethod(new MethodModel(false, "private", "aMethod", "Void"));
+    testClass.addField(new Reference("aMethod", "Void", true, false, "private"));
     var check = ' AClass [ label = "{AClass||- aMethod() : Void\\l}" ]';
     assertEquals(check, testClass.getDotStr());
   }
@@ -36,9 +36,9 @@ class TestClass extends haxe.unit.TestCase
   public function testClassOneMethodWithParam()
   {
     var testClass = new ClassModel("the.pkg", "AClass");
-    var method = new MethodModel(false, "private", "aMethod", "Void");
-    method.addParam(new ParamModel("aParam", "Int"));
-    testClass.addMethod(method);
+    var method = new Reference("aMethod", "Void", true, false, "private");
+    method.addParam(new Reference("aParam", "Int"));
+    testClass.addField(method);
     var check = ' AClass [ label = "{AClass||- aMethod(aParam : Int) : Void\\l}" ]';
     assertEquals(check, testClass.getDotStr());
   }
@@ -46,8 +46,8 @@ class TestClass extends haxe.unit.TestCase
   public function testClassTwoMethods()
   {
     var testClass = new ClassModel("the.pkg", "AClass");
-    testClass.addMethod(new MethodModel(false, "private", "aMethod1", "Void"));
-    testClass.addMethod(new MethodModel(false, "public", "aMethod2", "String"));
+    testClass.addField(new Reference("aMethod1", "Void", true, false, "private"));
+    testClass.addField(new Reference("aMethod2", "String", true, false, "public"));
     var check = ' AClass [ label = "{AClass||- aMethod1() : Void\\l+ aMethod2() : String\\l}" ]';
     assertEquals(check, testClass.getDotStr());
   }
@@ -55,8 +55,8 @@ class TestClass extends haxe.unit.TestCase
   public function testClassOneFieldOneMethod()
   {
     var testClass = new ClassModel("the.pkg", "AClass");
-    testClass.addField(new FieldModel(false, "private", "aField", "Int"));
-    testClass.addMethod(new MethodModel(false, "public", "aMethod", "String"));
+    testClass.addField(new Reference("aField", "Int", false, false, "private"));
+    testClass.addField(new Reference("aMethod", "String", true, false, "public"));
     var check = ' AClass [ label = "{AClass|- aField : Int\\l|+ aMethod() : String\\l}" ]';
     assertEquals(check, testClass.getDotStr());
   }

@@ -22,8 +22,8 @@ class Reference
 
   /**
 	constructor
-	@param t type
 	@param n name
+	@param t type
 	@param f if true, function
 	@param s if true, static
 	@param p protection

@@ -29,17 +29,17 @@ class TypedefModel implements ModelType
    **/
   public function getDotStr() : String
   {
-    return " " + name + " [ label = \"{" + name + "|" + getFieldsDotStr() + "}\" ]";
+    return " " + name + " [ label = \"{" + name + "|" + getFields() + "}\" ]";
   }
 
   /**
 	output the params as a dot string
    **/
-  private function getFieldsDotStr() : String
+  private function getFields() : String
   {
     var strBuf = new StringBuf();
     for( ff in fields )
-      strBuf.add(ff.getDotStr() + "\\l");
+      strBuf.add(ff.getParamStr() + "\\l");
 
     return strBuf.toString();
   }

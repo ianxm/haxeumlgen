@@ -27,7 +27,7 @@ class EnumModel implements ModelType
    **/
   public function getDotStr() : String
   {
-    return " " + path + " [ label = \"{" + path + "|" + getFieldsDotStr() + "}\" ]";
+    return '\t "' + path + '" [ label = "{' + path + '|' + getFieldsDotStr() + '}" ]\n';
   }
 
   /**

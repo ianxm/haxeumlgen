@@ -8,4 +8,4 @@
 # build app
 -main umlgen.HaxeUmlGen
 -neko ../bin/umlgen.n
-#-xml ../bin/umlgen.xml
+-xml ../bin/umlgen.xml

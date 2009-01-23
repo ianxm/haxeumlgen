@@ -67,7 +67,8 @@ class InputHandler
  private function buildClass(xmlNode:Xml)
   {
     var path = xmlNode.get("path");
-    var ret = new ClassModel(path);
+    var isInterface = xmlNode.exists("interface") && xmlNode.get("interface")=="1";
+    var ret = new ClassModel(path, isInterface);
     for( ee in xmlNode.elements() )
     {
       if( ee.nodeName == "implements" )
@@ -97,6 +98,10 @@ class InputHandler
     {
     case "e": return new Reference(name, node.get("path"), false, isPublic, isStatic);
     case "c": return new Reference(name, node.get("path"), false, isPublic, isStatic);
+    case "d": return new Reference(name, "Dynamic", false, isPublic, isStatic);
+    case "a": return new Reference(name, "Anonymous", false, isPublic, isStatic);
+    case "t": return new Reference(name, "Type", false, isPublic, isStatic);
+    case "unknown": return new Reference(name, "Unknown", false, isPublic, isStatic);
     case "f": return buildFuncRef(node, name, isPublic, isStatic);
     }
     return null;
@@ -113,7 +118,7 @@ class InputHandler
       if( pname=="" ) break;
       ref.addParam(buildReference(params.next(), pname, false, false));
     }
-    ref.type = params.next().get("path"); // set return type
+    ref.path = params.next().get("path"); // set return type
     return ref;
   }
 }

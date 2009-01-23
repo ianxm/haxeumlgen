@@ -27,7 +27,7 @@ class TypedefModel implements ModelType
    **/
   public function getDotStr() : String
   {
-    return " " + path + " [ label = \"{" + path + "|" + getFields() + "}\" ]";
+    return '\t "' + path + '" [ label = "{' + path + '|' + getFields() + '}" ]\n';
   }
 
   /**

@@ -5,14 +5,14 @@ class TestEnum extends haxe.unit.TestCase
   public function testEnumEmpty()
   {
     var testEnum = new EnumModel("the.pkg.AnEnum");
-    assertEquals(" the.pkg.AnEnum [ label = \"{the.pkg.AnEnum|}\" ]", testEnum.getDotStr());
+    assertEquals('\t "the.pkg.AnEnum" [ label = "{the.pkg.AnEnum|}" ]\n', testEnum.getDotStr());
   }
 
   public function testEnumOne()
   {
     var testEnum = new EnumModel("the.pkg.AnEnum");
     testEnum.addField("field1");
-    assertEquals(" the.pkg.AnEnum [ label = \"{the.pkg.AnEnum|field1\\l}\" ]", testEnum.getDotStr());
+    assertEquals('\t "the.pkg.AnEnum" [ label = "{the.pkg.AnEnum|field1\\l}" ]\n', testEnum.getDotStr());
   }
 
   public function testEnumTwo()
@@ -20,6 +20,6 @@ class TestEnum extends haxe.unit.TestCase
     var testEnum = new EnumModel("the.pkg.AnEnum");
     testEnum.addField("field1");
     testEnum.addField("field2");
-    assertEquals(" the.pkg.AnEnum [ label = \"{the.pkg.AnEnum|field1\\lfield2\\l}\" ]", testEnum.getDotStr());
+    assertEquals('\t "the.pkg.AnEnum" [ label = "{the.pkg.AnEnum|field1\\lfield2\\l}" ]\n', testEnum.getDotStr());
   }
 }

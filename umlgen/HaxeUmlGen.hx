@@ -14,6 +14,9 @@ class HaxeUmlGen
   /** output filename (png file) **/
   private var outFname : String;
 
+  /** target package for diagram **/
+  private var pkg : String;
+
   /** list of data types **/
   private var dataTypes : Hash<ModelType>;
 
@@ -31,7 +34,8 @@ class HaxeUmlGen
   public function run()
   {
     inFname = "umlgen.xml";
-    outFname = "umlgen_uml.png";
+    outFname = "umlgen.dot";
+    pkg = "umlgen";
 
     parseArgs();
 
@@ -60,6 +64,27 @@ class HaxeUmlGen
    **/
   private function callDot()
   { 
-    //var fout = neko.io.File.write(outFname);
+    // write file
+    var fout = neko.io.File.write(outFname, false);
+    fout.writeString('digraph uml\n');
+    fout.writeString('{\n');
+    fout.writeString('	center="false";\n');
+    fout.writeString('        fontname = "Sans";\n');
+    fout.writeString('        fontsize = "8";\n');
+    fout.writeString('	rankdir = "TB";\n');
+    fout.writeString('        node [ fontname="Sans", fontsize=8, shape="record" ]\n');
+    fout.writeString('        edge [ fontname="Sans", fontsize=8, minlen=3 ]\n');
+
+    for( dd in dataTypes.iterator() )
+    {
+      if( dd.path.indexOf(pkg) != -1 )
+	fout.writeString(dd.getDotStr() + '\n');
+    }
+
+    fout.writeString('}\n');
+    fout.close();
+
+    // call dot
+    neko.Sys.command('"c:/Program Files/Graphviz 2.21/bin/dot.exe" -T png -o umlgen.png umlgen.dot');
   }
 }

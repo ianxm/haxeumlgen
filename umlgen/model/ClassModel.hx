@@ -6,31 +6,25 @@ package umlgen.model;
 class ClassModel implements ModelType
 {
   public var path(default,null) : String;
+  private var isInterface : Bool;
 
   /** this contains fields and methods **/
   private var fields : List<Reference>;
 
   private var parents : List<Reference>;
-  private var children : List<Reference>;
 
-  public function new(p)
+  public function new(p, i)
   {
     path = p;
+    isInterface = i;
     fields = new List<Reference>();
     parents = new List<Reference>();
-    children = new List<Reference>();
   }
 
   /**	add a super class   **/
   public function addParent(p)
   {
     parents.add(p);
-  }
-
-  /**	add a subclass   **/
-  public function addChild(c)
-  {
-    children.add(c);
   }
 
   /**	add a field   **/
@@ -41,8 +35,16 @@ class ClassModel implements ModelType
 
   public function getDotStr() : String
   {
-    return " " + path + " [ label = \"{" + path + "|" + getFieldsDotStr() + "|" 
-      + getMethodsDotStr() + "}\" ]";
+    var strBuf = new StringBuf();
+    var topBox = (isInterface) ? '\\<interface\\>\\n' + path : path;
+    strBuf.add('\t "' + path + '" [ label = "{' + topBox + '|' + getFieldsDotStr() + '|' + getMethodsDotStr() + '}" ]\n');
+    if( !parents.isEmpty() )
+    {
+      strBuf.add('\t  edge [ arrowhead = "empty" ]\n');
+      for( pp in parents )
+	strBuf.add('\t  "' + path + '" -> "' + pp.path + '"\n');
+    }
+    return strBuf.toString();
   }
 
   /**

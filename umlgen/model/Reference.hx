@@ -3,7 +3,7 @@ package umlgen.model;
 class Reference
 {
   /** package and type, for functions this is the return type **/
-  public var type(default,default) : String;
+  public var path(default,default) : String;
 
   /** variable name **/
   private var name : String;
@@ -23,31 +23,31 @@ class Reference
   /**
 	constructor
 	@param n name
-	@param t type
+	@param p path
 	@param f if true, function
 	@param s if true, static
-	@param p protection
+	@param pr protection
    **/
-  public function new(n, t, ?f=false, ?p=false, ?s=false)
+  public function new(n, p, ?f=false, ?pr=false, ?s=false)
   {
     name = n;
-    type = t;
+    path = p;
     isFunc = f;
-    protection = (p) ? "+" : "-";
+    protection = (pr) ? "+" : "-";
     isStatic = s;
     params = (isFunc) ? new List<Reference>() : null;
   }
 
   /**	add a param	**/
   inline public function addParam(r)
-  {    params.add(r);  }
+  {	params.add(r);  }
 
   /**
 	output this type as a function parameter
    **/
   public function getParamStr() : String
   {
-    return name + getFuncParams() + " : " + type;
+    return name + getFuncParams() + " : " + path;
   }
 
   /**
@@ -55,7 +55,7 @@ class Reference
    **/
   public function getFieldStr() : String
   {
-    return protection + " " + name + getFuncParams() + " : " + type + "\\l";
+    return protection + " " + name + getFuncParams() + " : " + path + "\\l";
   }
 
   /**

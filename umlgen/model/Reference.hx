@@ -28,21 +28,13 @@ class Reference
 	@param s if true, static
 	@param p protection
    **/
-  public function new(n, t, ?f=false, ?s, ?p)
+  public function new(n, t, ?f=false, ?p=false, ?s=false)
   {
     name = n;
     type = t;
-    isStatic = s;
-
-    protection =
-      switch (p)
-      {
-      case "private": "-";
-      case "public": "+";
-      default: "?";
-      }
-
     isFunc = f;
+    protection = (p) ? "+" : "-";
+    isStatic = s;
     params = (isFunc) ? new List<Reference>() : null;
   }
 

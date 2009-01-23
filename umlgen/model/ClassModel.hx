@@ -5,12 +5,16 @@ package umlgen.model;
  **/
 class ClassModel implements ModelType
 {
+  /** package and class name **/
   public var path(default,null) : String;
+
+  /** if true, this is an interface **/
   private var isInterface : Bool;
 
   /** this contains fields and methods **/
   private var fields : List<Reference>;
 
+  /** this is a list of super classes **/
   private var parents : List<Reference>;
 
   public function new(p, i)
@@ -33,10 +37,15 @@ class ClassModel implements ModelType
     fields.add(f);
   }
 
+  /**
+	output the class in dot format.  this also connects it to others
+   **/
   public function getDotStr() : String
   {
     var strBuf = new StringBuf();
-    var topBox = (isInterface) ? '\\<interface\\>\\n' + path : path;
+    var sep = path.lastIndexOf(".");
+    var name = (sep==-1) ? path : path.substr(sep+1, path.length-sep-1);
+    var topBox = (isInterface) ? '\\<interface\\>\\n' + name : name;
     strBuf.add('\t "' + path + '" [ label = "{' + topBox + '|' + getFieldsDotStr() + '|' + getMethodsDotStr() + '}" ]\n');
     if( !parents.isEmpty() )
     {
@@ -49,6 +58,7 @@ class ClassModel implements ModelType
 
   /**
 	output the fields as a dot string
+	@todo skip inherited fields
    **/
   private function getFieldsDotStr() : String
   {
@@ -61,6 +71,7 @@ class ClassModel implements ModelType
 
   /**
 	output the methods as a dot string
+	@todo skip inherited methods
    **/
   private function getMethodsDotStr() : String
   {

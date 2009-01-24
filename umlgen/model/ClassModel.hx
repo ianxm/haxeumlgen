@@ -137,10 +137,6 @@ class ClassModel implements ModelType
     var assoc = new List<Reference>();
     for( rr in fields )
     {
-      // skip functions
-      if( rr.path == null )
-	continue;
-
       // add fields and field type params, only add each reference once
       for( aa in rr.inPkg(HaxeUmlGen.pkg) )
 	if( !Lambda.exists(assoc, function(tt) { return aa.path==tt.path; }) )

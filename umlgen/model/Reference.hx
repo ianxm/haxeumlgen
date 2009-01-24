@@ -131,6 +131,12 @@ class Reference
       for( pp2 in pp.inPkg(p) )
 	ret.add(pp2);
 
+    // check params
+    if( isFunc )
+      for( pp in params )
+	for( pp2 in pp.inPkg(p) )
+	  ret.add(pp2);
+
     // check me
     if( p == pkg )
       ret.add(this);

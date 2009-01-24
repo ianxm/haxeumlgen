@@ -25,6 +25,9 @@ class Reference
   /** return true if this references a function **/
   public var isFunc(default,null):Bool;
 
+  /** type parameter **/
+  private var tParams : List<Reference>;
+
   /** list of params if this is a function **/
   private var params : List<Reference>;
 
@@ -47,11 +50,16 @@ class Reference
     protection = (pr) ? "+" : "-";
     isStatic = s;
     params = (isFunc) ? new List<Reference>() : null;
+    tParams = new List<Reference>();
   }
 
   /**	add a param	**/
   inline public function addParam(r)
   {	params.add(r);  }
+
+  /**	add a type param	**/
+  inline public function addTParam(r)
+  {	tParams.add(r);  }
 
   /**
 	output this type as a function parameter
@@ -59,7 +67,7 @@ class Reference
   public function getParamStr() : String
   {
     var type = (pkg == HaxeUmlGen.pkg) ? type : path;
-    return name + getFuncParams() + " : " + type;
+    return name + getFuncParams() + " : " + type + getTParamsStr();
   }
 
   /**
@@ -68,7 +76,28 @@ class Reference
   public function getFieldStr() : String
   {
     var type = (pkg == HaxeUmlGen.pkg) ? type : path;
-    return protection + " " + name + getFuncParams() + " : " + type + "\\l";
+    return protection + " " + name + getFuncParams() + " : " + type + getTParamsStr() + "\\l";
+  }
+
+  /**
+	get type params for field str
+   **/
+  private function getTParamsStr() : String
+  {
+    trace("get params str: " + path + " " + tParams);
+    if( tParams.isEmpty() )
+      return "";
+    var strBuf = new StringBuf();
+    strBuf.add("\\<");
+    for( pp in tParams )
+    {
+      var type = (pp.pkg == HaxeUmlGen.pkg) ? pp.type : pp.path;
+      strBuf.add(type);
+      if( pp != tParams.last())
+	strBuf.add(", ");
+    }
+    strBuf.add("\\>");
+    return strBuf.toString();
   }
 
   /**
@@ -88,6 +117,25 @@ class Reference
     strBuf.add(")");
 
     return strBuf.toString();
+  }
+
+  /**
+	@return true if this reference is in any way in the given package
+   **/
+  public function inPkg(p:String) : List<Reference>
+  {
+    var ret = new List<Reference>();
+
+    // check type params
+    for( pp in tParams )
+      for( pp2 in pp.inPkg(p) )
+	ret.add(pp2);
+
+    // check me
+    if( p == pkg )
+      ret.add(this);
+
+    return ret;
   }
 
   /**

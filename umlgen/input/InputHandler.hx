@@ -101,7 +101,7 @@ class InputHandler
     switch( node.nodeName )
     {
     case "e": return new Reference(name, node.get("path"), false, isPublic, isStatic);
-    case "c": return new Reference(name, node.get("path"), false, isPublic, isStatic);
+    case "c": return buildClassRef(node, name, isPublic, isStatic);
     case "d": return new Reference(name, "Dynamic", false, isPublic, isStatic);
     case "a": return new Reference(name, "Anonymous", false, isPublic, isStatic);
     case "t": return new Reference(name, "Type", false, isPublic, isStatic);
@@ -109,6 +109,17 @@ class InputHandler
     case "f": return buildFuncRef(node, name, isPublic, isStatic);
     }
     return null;
+  }
+
+  /**
+	this builds a class reference, adds type params if there are any
+   **/
+  private function buildClassRef(node:Xml, name, isPublic, isStatic)
+  {
+    var ret = new Reference(name, node.get("path"), false, isPublic, isStatic);
+    for( ee in node.elements() )
+      ret.addTParam(buildReference(ee, "param", false, false));
+    return ret;
   }
 
   /**

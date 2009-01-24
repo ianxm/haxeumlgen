@@ -62,7 +62,7 @@ class ClassModel implements ModelType
       for( pp in parents )
 	strBuf.add('\t  "' + path + '" -> "' + pp.path + '"\n');
     }
-    /*
+
     var assoc = findAssociations();
     if( !assoc.isEmpty() )
     {
@@ -70,7 +70,7 @@ class ClassModel implements ModelType
       for( aa in assoc )
 	strBuf.add('\t  "' + path + '" -> "' + aa.path + '"\n');
     }
-    */
+
     return strBuf.toString();
   }
 
@@ -100,19 +100,27 @@ class ClassModel implements ModelType
     return strBuf.toString();
   }
 
-}
   /**
-	@todo also check functions
-   **
-  private function findAssociations(pkg)
+	find out which data types this class is associated with
+	@return list of references of associated data types
+   **/
+  private function findAssociations()
   {
     var assoc = new List<Reference>();
     for( rr in fields )
     {
-      if( rr.path.indexOf(pkg)!=-1 )
-	assoc.add(rr);
+      // skip functions
+      if( rr.path == null )
+	continue;
+
+      // add fields and field type params, only add each reference once
+      for( aa in rr.inPkg(HaxeUmlGen.pkg) )
+	if( !Lambda.exists(assoc, function(tt) { return aa.path==tt.path; }) )
+	  assoc.add(aa);
     }
+    trace("assoc: " + type + " " + assoc);
+    return assoc;
   }
-  */
+}
 
 

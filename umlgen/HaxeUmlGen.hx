@@ -46,6 +46,7 @@ class HaxeUmlGen
   {
     try
     {
+      checkForDot();
       parseArgs(); // parse command line arguemnts
       readXml(); // read input xml file
       callDot(); // write dot input, call dot
@@ -55,6 +56,16 @@ class HaxeUmlGen
       neko.Lib.println("Error: " + ex);
       neko.Sys.exit(1);
     }
+  }
+
+  /**
+	first make sure dot is installed and in the path
+   **/
+  private function checkForDot()
+  {
+    var ret = new neko.io.Process("dot", ["-V"]);
+    if( ret.exitCode() != 0 )
+      throw "dot is not installed";
   }
 
   /**
@@ -145,26 +156,27 @@ class HaxeUmlGen
     if( boxes.isEmpty() )
       throw "No classes found in the desired package";
 
-    // write file
-    var dotFname = outDir + "/" + pkg + ".dot";
-    var fout = neko.io.File.write(dotFname, false);
-    fout.writeString('digraph uml\n');
-    fout.writeString('{\n');
-    fout.writeString('        label = "Package: ' + pkg + '";\n');
-    fout.writeString('        fontname = "Sans";\n');
-    fout.writeString('        fontsize = "8";\n');
-    fout.writeString('        node [ fontname="Sans", fontsize=8, shape="record" ]\n');
-    fout.writeString('        edge [ fontname="Sans", fontsize=8, minlen=3 ]\n');
-
+    // write dot commands to string buffer
+    var buf = new StringBuf();
+    buf.add('digraph uml\n');
+    buf.add('{\n');
+    buf.add('        label = "Package: ' + pkg + '";\n');
+    buf.add('        fontname = "Sans";\n');
+    buf.add('        fontsize = "8";\n');
+    buf.add('        node [ fontname="Sans", fontsize=8, shape="record" ]\n');
+    buf.add('        edge [ fontname="Sans", fontsize=8, minlen=3 ]\n');
     for( dd in boxes )
-      fout.writeString(dd.getDotStr() + '\n');
+      buf.add(dd.getDotStr() + '\n');
+    buf.add('}\n');
 
-    fout.writeString('}\n');
-    fout.close();
-
-    // call dot
+    // call dot, pass string buffer to stdin
     var pngFname = outDir + "/" + pkg + ".png";
-    neko.Sys.command('dot -T png -o ' + pngFname + ' ' + dotFname);
-    neko.FileSystem.deleteFile(dotFname);
+    var proc = new neko.io.Process('dot',['-Tpng', '-o', pngFname]);
+    proc.stdin.writeString(buf.toString());
+    proc.stdin.close();
+
+    // check exit code
+    if( proc.exitCode() != 0 )
+      throw "Graphviz failed";
   }
 }

@@ -1,10 +1,14 @@
 package umlgen;
 
 import umlgen.model.ModelType;
-import umlgen.input.InputHandler;
 
 /**
 	The haxe uml generator dynamically creates class diagrams for haxe projects.
+
+	exit codes:
+	 0 good
+	 1 error
+	 2 dot not installed
 **/
 class HaxeUmlGen
 {
@@ -20,6 +24,7 @@ class HaxeUmlGen
   /** list of data types **/
   public static var dataTypes(default,null) : List<ModelType>;
 
+  /** current app version **/
   private var VERSION : String;
 
   /**
@@ -54,7 +59,10 @@ class HaxeUmlGen
     catch (ex:String)
     {
       neko.Lib.println("Error: " + ex);
-      neko.Sys.exit(1);
+      if( ex=="dot is not installed" )
+	neko.Sys.exit(2);
+      else
+	neko.Sys.exit(1);
     }
   }
 

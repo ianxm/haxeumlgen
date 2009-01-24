@@ -1,4 +1,4 @@
-package umlgen.input;
+package umlgen;
 
 import umlgen.model.ModelType;
 import umlgen.model.ClassModel;

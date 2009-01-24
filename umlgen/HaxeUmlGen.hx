@@ -150,6 +150,7 @@ class HaxeUmlGen
     var fout = neko.io.File.write(dotFname, false);
     fout.writeString('digraph uml\n');
     fout.writeString('{\n');
+    fout.writeString('        label = "Package: ' + pkg + '";\n');
     fout.writeString('        fontname = "Sans";\n');
     fout.writeString('        fontsize = "8";\n');
     fout.writeString('        node [ fontname="Sans", fontsize=8, shape="record" ]\n');

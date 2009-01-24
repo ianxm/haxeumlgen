@@ -7,5 +7,6 @@
 
 # build app
 -main umlgen.HaxeUmlGen
--neko ../bin/umlgen.n
+-neko ../bin/haxeumlgen.n
 -xml ../bin/umlgen.xml
+-cmd nekotools boot ../bin/haxeumlgen.n

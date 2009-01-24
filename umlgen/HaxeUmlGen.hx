@@ -64,26 +64,28 @@ class HaxeUmlGen
   {
     var args = neko.Sys.args();
     if( args.length<2 )
+    {
+      checkHelpVer(args[0]);
       throw ("Not enough arguments");
+    }
 
     var iter = args.iterator();
     while( iter.hasNext() )
     {
       var aa = iter.next();
-      if( aa == args[args.length-2] )
-	inFname = aa;
+      checkHelpVer(aa);
 
-      else if( aa == args[args.length-1] )
-	pkg = aa;
-
-      else if( aa=="-o" )
+      if( aa=="-o" )
 	outDir = iter.next();
       
       else if( aa.indexOf("--outdir=") != -1 )
 	outDir = aa.substr(9);
 
-      else if( aa=="-h" || aa=="--help" )
-	showHelp();
+      else if( aa == args[args.length-2] )
+	inFname = aa;
+
+      else if( aa == args[args.length-1] )
+	pkg = aa;
 
       else
 	throw "Unknown option: " + aa;
@@ -95,19 +97,34 @@ class HaxeUmlGen
       outDir = (indx == -1) ? "." : inFname.substr(0, indx);
     }
 
+    if( !neko.FileSystem.exists(inFname) )
+      throw "Error: Input file doesn't exist";
+
     if( !neko.FileSystem.exists(outDir) )
       throw "Error: Output directory doesn't exist";
   }
 
-  private function showHelp()
+  /**
+	check for help or version flag.  if found, display output and exit.
+   **/
+  private function checkHelpVer(aa)
   {
-    neko.Lib.println("HaxeUmlGen v" + VERSION);
-    neko.Lib.println("usage: haxeUmlGen [options] [xml file] [package]");
-    neko.Lib.println("");
-    neko.Lib.println("options:");
-    neko.Lib.println(" -o --outdir=DIR	change the output directory");
-    neko.Lib.println(" -h --help	show this message and exit");
-    neko.Sys.exit(0);
+      if( aa=="-h" || aa=="--help" )
+      {
+	neko.Lib.println("HaxeUmlGen v" + VERSION);
+	neko.Lib.println("Usage: haxeumlgen [OPTION] [FILE] [PACKAGE]");
+	neko.Lib.println("Generate UML diagrams for haXe projects");
+	neko.Lib.println("");
+	neko.Lib.println(" -o --outdir=DIR	Change the output directory.  Same as input by default");
+	neko.Lib.println(" -v --version		Show version and exit");
+	neko.Lib.println(" -h --help		Show this message and exit");
+	neko.Sys.exit(0);
+      }
+      else if( aa=="-v" || aa=="--version" )
+      {
+	neko.Lib.println("HaxeUmlGen v" + VERSION);
+	neko.Sys.exit(0);
+      }
   }
 
   /**

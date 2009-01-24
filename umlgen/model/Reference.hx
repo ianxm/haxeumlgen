@@ -14,7 +14,7 @@ class Reference
   public var type(default,null) : String;
 
   /** variable name **/
-  private var name : String;
+  public var name(default,null) : String;
 
   /** true if variable is static **/
   private var isStatic : Bool;
@@ -72,6 +72,7 @@ class Reference
 
   /**
 	output this type as a class field
+	@todo underline statics
    **/
   public function getFieldStr() : String
   {

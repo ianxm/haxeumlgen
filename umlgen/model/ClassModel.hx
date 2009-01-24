@@ -76,12 +76,12 @@ class ClassModel implements ModelType
 
   /**
 	output the fields as a dot string
-	@todo skip inherited fields
    **/
   private function getFieldsDotStr() : String
   {
     var strBuf = new StringBuf();
-    for( ff in fields.filter(function(ii) { return !ii.isFunc; }) )
+    var isInherited = this.isInherited;
+    for( ff in fields.filter(function(ii) { return !ii.isFunc && !isInherited(ii); }) )
       strBuf.add(ff.getFieldStr());
 
     return strBuf.toString();
@@ -89,15 +89,43 @@ class ClassModel implements ModelType
 
   /**
 	output the methods as a dot string
-	@todo skip inherited methods
    **/
   private function getMethodsDotStr() : String
   {
     var strBuf = new StringBuf();
-    for( mm in fields.filter(function(ii) { return ii.isFunc; }) )
+    var isInherited = this.isInherited;
+    for( mm in fields.filter(function(ii) { return ii.isFunc && !isInherited(ii); }) )
       strBuf.add(mm.getFieldStr());
 
     return strBuf.toString();
+  }
+
+  /**
+	@return true if this field is inherited from a parent
+   **/
+  private function isInherited(ref:Reference)
+  {
+    for( pp in parents )
+    {
+      var pobj = SLambda.findFirst(HaxeUmlGen.dataTypes, function(dd) { return dd.path==pp.path; });
+      if( pobj == null )
+	throw "parent not found";
+
+      if( !Std.is(pobj, ClassModel) )
+	throw "parent not class";
+
+      if( cast(pobj,ClassModel).hasRef(ref) )
+	return true;
+    }
+    return false;
+  }
+
+  /**
+	@return true if this class has the given field
+   **/
+  public function hasRef(ref:Reference)
+  {
+    return Lambda.exists(fields, function(ff) { return ff.name==ref.name; });
   }
 
   /**

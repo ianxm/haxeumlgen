@@ -94,7 +94,6 @@ class InputHandler
 
   /**
 	this creates a reference
-	@todo add class parameters
    **/
   private function buildReference(node:Xml, name, isPublic, isStatic)
   {

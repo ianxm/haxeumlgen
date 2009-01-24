@@ -18,7 +18,7 @@ class HaxeUmlGen
   public static var pkg(default,null) : String;
 
   /** list of data types **/
-  private var dataTypes : List<ModelType>;
+  public static var dataTypes(default,null) : List<ModelType>;
 
   private var VERSION : String;
 
@@ -52,7 +52,7 @@ class HaxeUmlGen
     }
     catch (ex:String)
     {
-      neko.Lib.println(ex);
+      neko.Lib.println("Error: " + ex);
       neko.Sys.exit(1);
     }
   }

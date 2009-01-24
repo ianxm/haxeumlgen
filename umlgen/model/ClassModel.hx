@@ -118,7 +118,6 @@ class ClassModel implements ModelType
 	if( !Lambda.exists(assoc, function(tt) { return aa.path==tt.path; }) )
 	  assoc.add(aa);
     }
-    trace("assoc: " + type + " " + assoc);
     return assoc;
   }
 }

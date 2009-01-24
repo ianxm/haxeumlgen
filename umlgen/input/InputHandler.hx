@@ -13,7 +13,7 @@ class InputHandler
 
   public function readXml(fname)
   {
-    var dataTypes = new Hash<ModelType>();
+    var dataTypes = new List<ModelType>();
     var fData = neko.io.File.getContent(fname);
     var xmlData = Xml.parse(fData).firstElement();
     for( nn in xmlData.elements() )
@@ -29,7 +29,7 @@ class InputHandler
 
       var ret = builder(nn);
       if( ret != null )
-	dataTypes.set(ret.path, ret);
+	dataTypes.add(ret);
 
       //neko.Lib.println("element: " + nn.nodeName + " " + nn.get("path"));
     }
@@ -101,10 +101,10 @@ class InputHandler
     switch( node.nodeName )
     {
     case "e": return new Reference(name, node.get("path"), false, isPublic, isStatic);
+    case "t": return new Reference(name, node.get("path"), false, isPublic, isStatic);
     case "c": return buildClassRef(node, name, isPublic, isStatic);
     case "d": return new Reference(name, "Dynamic", false, isPublic, isStatic);
     case "a": return new Reference(name, "Anonymous", false, isPublic, isStatic);
-    case "t": return new Reference(name, "Type", false, isPublic, isStatic);
     case "unknown": return new Reference(name, "Unknown", false, isPublic, isStatic);
     case "f": return buildFuncRef(node, name, isPublic, isStatic);
     }

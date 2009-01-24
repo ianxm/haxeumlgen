@@ -84,7 +84,6 @@ class Reference
    **/
   private function getTParamsStr() : String
   {
-    trace("get params str: " + path + " " + tParams);
     if( tParams.isEmpty() )
       return "";
     var strBuf = new StringBuf();

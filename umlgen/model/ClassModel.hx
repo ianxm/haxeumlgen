@@ -1,5 +1,7 @@
 package umlgen.model;
 
+import umlgen.HaxeUmlGen;
+
 /**
 	a class
  **/
@@ -7,6 +9,12 @@ class ClassModel implements ModelType
 {
   /** package and class name **/
   public var path(default,null) : String;
+
+  /** package **/
+  public var pkg(default,null) : String;
+
+  /** class name **/
+  public var type(default,null) : String;
 
   /** if true, this is an interface **/
   private var isInterface : Bool;
@@ -20,6 +28,9 @@ class ClassModel implements ModelType
   public function new(p, i)
   {
     path = p;
+    var pathSep = Reference.separatePath(path);
+    pkg = pathSep.pkg;
+    type = pathSep.type;
     isInterface = i;
     fields = new List<Reference>();
     parents = new List<Reference>();
@@ -43,9 +54,7 @@ class ClassModel implements ModelType
   public function getDotStr() : String
   {
     var strBuf = new StringBuf();
-    var sep = path.lastIndexOf(".");
-    var name = (sep==-1) ? path : path.substr(sep+1, path.length-sep-1);
-    var topBox = (isInterface) ? '\\<interface\\>\\n' + name : name;
+    var topBox = (isInterface) ? '\\<interface\\>\\n' + type : type;
     strBuf.add('\t "' + path + '" [ label = "{' + topBox + '|' + getFieldsDotStr() + '|' + getMethodsDotStr() + '}" ]\n');
     if( !parents.isEmpty() )
     {
@@ -53,6 +62,15 @@ class ClassModel implements ModelType
       for( pp in parents )
 	strBuf.add('\t  "' + path + '" -> "' + pp.path + '"\n');
     }
+    /*
+    var assoc = findAssociations();
+    if( !assoc.isEmpty() )
+    {
+      strBuf.add('\t  edge [ arrowhead = "none" ]\n');
+      for( aa in assoc )
+	strBuf.add('\t  "' + path + '" -> "' + aa.path + '"\n');
+    }
+    */
     return strBuf.toString();
   }
 
@@ -81,4 +99,20 @@ class ClassModel implements ModelType
 
     return strBuf.toString();
   }
+
 }
+  /**
+	@todo also check functions
+   **
+  private function findAssociations(pkg)
+  {
+    var assoc = new List<Reference>();
+    for( rr in fields )
+    {
+      if( rr.path.indexOf(pkg)!=-1 )
+	assoc.add(rr);
+    }
+  }
+  */
+
+

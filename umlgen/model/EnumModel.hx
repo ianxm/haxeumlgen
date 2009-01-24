@@ -5,12 +5,23 @@ package umlgen.model;
  **/
 class EnumModel implements ModelType
 {
+  /** package and class name **/
   public var path(default,null) : String;
+
+  /** package **/
+  public var pkg(default,null) : String;
+
+  /** class name **/
+  public var type(default,null) : String;
+
   private var fields : List<String>;
 
   public function new(p)
   {
     path = p;
+    var pathSep = Reference.separatePath(path);
+    pkg = pathSep.pkg;
+    type = pathSep.type;
     fields = new List<String>();
   }
 

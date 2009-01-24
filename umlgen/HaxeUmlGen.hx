@@ -15,10 +15,11 @@ class HaxeUmlGen
   private var outFname : String;
 
   /** target package for diagram **/
-  private var pkg : String;
+  public static var pkg(default,null) : String;
 
   /** list of data types **/
   private var dataTypes : Hash<ModelType>;
+
 
   /**
 	this is the main function.
@@ -35,7 +36,7 @@ class HaxeUmlGen
   {
     inFname = "umlgen.xml";
     outFname = "umlgen.dot";
-    pkg = "umlgen";
+    pkg = "umlgen.model";
 
     parseArgs();
 
@@ -77,7 +78,7 @@ class HaxeUmlGen
 
     for( dd in dataTypes.iterator() )
     {
-      if( dd.path.indexOf(pkg) != -1 )
+      if( dd.pkg==pkg )
 	fout.writeString(dd.getDotStr() + '\n');
     }
 
@@ -85,6 +86,6 @@ class HaxeUmlGen
     fout.close();
 
     // call dot
-    neko.Sys.command('"c:/Program Files/Graphviz 2.21/bin/dot.exe" -T png -o umlgen.png umlgen.dot');
+    neko.Sys.command('dot -T png -o umlgen.png umlgen.dot');
   }
 }

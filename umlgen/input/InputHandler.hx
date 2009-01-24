@@ -92,6 +92,10 @@ class InputHandler
     return ret;
   }
 
+  /**
+	this creates a reference
+	@todo add class parameters
+   **/
   private function buildReference(node:Xml, name, isPublic, isStatic)
   {
     switch( node.nodeName )
@@ -107,6 +111,9 @@ class InputHandler
     return null;
   }
 
+  /**
+	this builds a function reference, filling in the params
+   **/
   private function buildFuncRef(node:Xml, name, isPublic, isStatic)
   {
     var ref = new Reference(name, null, true, isPublic, isStatic);

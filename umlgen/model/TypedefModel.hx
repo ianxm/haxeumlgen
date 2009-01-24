@@ -5,12 +5,23 @@ package umlgen.model;
  **/
 class TypedefModel implements ModelType
 {
+  /** package and type, for functions this is the return type **/
   public var path(default,null) : String;
+
+  /** package **/
+  public var pkg(default,null) : String;
+
+  /** class name **/
+  public var type(default,null) : String;
+
   private var fields : List<Reference>;
 
   public function new(p)
   {
     path = p;
+    var pathSep = Reference.separatePath(path);
+    pkg = pathSep.pkg;
+    type = pathSep.type;
     fields = new List<Reference>();
   }
 

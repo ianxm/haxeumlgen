@@ -98,6 +98,7 @@ class HaxeUmlGen
 
   /**
 	first make sure dot is installed and in the path
+	@throws string if dot is not on the execution path
    **/
   private function checkForDot()
   {
@@ -108,11 +109,12 @@ class HaxeUmlGen
 
   /**
 	parse the command line args
+	@throws string if bad option, input file not found, or output dir not found
    **/
   private function parseArgs()
   {
     var args = neko.Sys.args();
-    if( args.length<2 )
+    if( args.length<1 )
     {
       checkHelpVer(args[0]);
       throw ("Not enough arguments");
@@ -142,11 +144,8 @@ class HaxeUmlGen
       else if( aa.indexOf("--fgcolor=") != -1 )
 	fgColor = aa.substr(10);
 
-      else if( aa == args[args.length-2] )
-	inFname = aa;
-
       else if( aa == args[args.length-1] )
-	pkg = aa;
+	inFname = aa;
 
       else
 	throw "Unknown option: " + aa;
@@ -167,13 +166,14 @@ class HaxeUmlGen
 
   /**
 	check for help or version flag.  if found, display output and exit.
+	@param aa current command line arg
    **/
   private function checkHelpVer(aa)
   {
       if( aa=="-h" || aa=="--help" )
       {
 	neko.Lib.println("HaxeUmlGen v" + VERSION);
-	neko.Lib.println("Usage: haxeumlgen [OPTION] [FILE] [PACKAGE]");
+	neko.Lib.println("Usage: haxeumlgen [OPTIONS] [FILE]");
 	neko.Lib.println("Generate UML diagrams for haXe projects");
 	neko.Lib.println("");
 	neko.Lib.println(" -o --outdir=DIR	Change the output directory.  Same as input by default");
@@ -200,36 +200,48 @@ class HaxeUmlGen
 
   /**
 	call dot.  this writes the dot input file and makes a system call to run dot.
-	@todo replace this with a library call
+	@throws string if specified package isn't found or dot fails
    **/
   private function callDot()
   {
-    var boxes = dataTypes.filter(function(dd) { return dd.pkg==pkg; });
-    if( boxes.isEmpty() )
-      throw "No classes found in the desired package";
+    // get list of packages
+    var packages = new List<String>();
+    for( dd in dataTypes )
+      if( !Lambda.exists(packages, function(pp) { return pp==dd.pkg; }) )
+	packages.add(dd.pkg);
 
-    // write dot commands to string buffer
-    var buf = new StringBuf();
-    buf.add('digraph uml\n');
-    buf.add('{\n');
-    buf.add('        label = "Package: ' + pkg + '";\n');
-    buf.add('        fontname = "Sans";\n');
-    buf.add('        fontsize = "8";\n');
-    buf.add('        bgcolor = "' + bgColor + '";\n');
-    buf.add('        node [ fontname="Sans", fontsize=8, shape="record", color="' + fgColor + '", fontcolor="' + fgColor + '" ]\n');
-    buf.add('        edge [ fontname="Sans", fontsize=8, minlen=3, color="' + fgColor + '", fontcolor="' + fgColor + '" ]\n');
-    for( dd in boxes )
-      buf.add(dd.getDotStr() + '\n');
-    buf.add('}\n');
+    // generate a diagram for each package
+    for( pp in packages )
+    {
+      pkg = pp;
+      var boxes = dataTypes.filter(function(dd) { return dd.pkg==pkg; });
+      if( boxes.isEmpty() )
+	throw "No classes found in the desired package";
 
-    // call dot, pass string buffer to stdin
-    var pngFname = outDir + "/" + pkg + ".png";
-    var proc = new neko.io.Process('dot',['-Tpng', '-o', pngFname]);
-    proc.stdin.writeString(buf.toString());
-    proc.stdin.close();
+      // write dot commands to string buffer
+      var buf = new StringBuf();
+      buf.add('digraph uml\n');
+      buf.add('{\n');
+      buf.add('        label = "Package: ' + pkg + '";\n');
+      buf.add('        fontname = "Sans";\n');
+      buf.add('        fontsize = "8";\n');
+      buf.add('        bgcolor = "' + bgColor + '";\n');
+      buf.add('        node [ fontname="Sans", fontsize=8, shape="record", color="' + fgColor + '", fontcolor="' + fgColor + '" ]\n');
+      buf.add('        edge [ fontname="Sans", fontsize=8, minlen=3, color="' + fgColor + '", fontcolor="' + fgColor + '" ]\n');
+      for( dd in boxes )
+	buf.add(dd.getDotStr() + '\n');
+      buf.add('}\n');
 
-    // check exit code
-    if( proc.exitCode() != 0 )
-      throw "Graphviz failed";
+      // call dot, pass string buffer to stdin
+      if( pkg=="" ) pkg = "Root";
+      var pngFname = outDir + "/" + pkg + ".png";
+      var proc = new neko.io.Process('dot',['-Tpng', '-o', pngFname]);
+      proc.stdin.writeString(buf.toString());
+      proc.stdin.close();
+
+      // check exit code
+      if( proc.exitCode() != 0 )
+	throw "Graphviz failed";
+    }
   }
 }

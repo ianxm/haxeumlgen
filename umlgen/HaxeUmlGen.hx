@@ -83,7 +83,7 @@ class HaxeUmlGen
    **/
   public function run()
   {
-    neko.Lib.println("Haxe Uml Generator v" + VERSION + " - (c) 2009 Ian Martins");
+    neko.Lib.println("HaxeUmlGen v" + VERSION + " - (c) 2009 Ian Martins");
 
     // first check that graphviz is installed
     checkForDot();
@@ -201,7 +201,6 @@ class HaxeUmlGen
   {
       if( aa=="-h" || aa=="--help" )
       {
-	neko.Lib.println("Haxe Uml Generator v" + VERSION);
 	neko.Lib.println("Usage: haxeumlgen [OPTIONS] [FILE]");
 	neko.Lib.println("Generate UML diagrams for haXe projects");
 	neko.Lib.println("");
@@ -214,10 +213,7 @@ class HaxeUmlGen
 	neko.Sys.exit(0);
       }
       else if( aa=="-v" || aa=="--version" )
-      {
-	neko.Lib.println("HaxeUmlGen v" + VERSION);
 	neko.Sys.exit(0);
-      }
   }
 
   /**

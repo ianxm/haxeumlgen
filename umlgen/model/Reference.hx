@@ -75,16 +75,23 @@ class Reference
     tParams = new List<Reference>();
   }
 
-  /**	add a param	**/
+  /**	
+	add a param
+	@param r new param
+   **/
   inline public function addParam(r)
   {	params.add(r);  }
 
-  /**	add a type param	**/
+  /**	
+	add a type param
+	@param r new type param
+   **/
   inline public function addTParam(r)
   {	tParams.add(r);  }
 
   /**
 	output this type as a function parameter
+	@return dot expression for a parameter
    **/
   public function getParamStr() : String
   {
@@ -94,6 +101,7 @@ class Reference
 
   /**
 	output this type as a class field
+	@return dot expression for a field
 	@todo underline statics
    **/
   public function getFieldStr() : String
@@ -104,6 +112,7 @@ class Reference
 
   /**
 	get type params for field str
+	@return dot expression for a type parameter
    **/
   private function getTParamsStr() : String
   {
@@ -124,6 +133,7 @@ class Reference
 
   /**
 	output the params as a dot string
+	@return dot expression for a function param
    **/
   public function getFuncParams() : String
   {
@@ -142,7 +152,9 @@ class Reference
   }
 
   /**
-	@return true if this reference is in any way in the given package
+	get a list of this type and its children that are in the specified package
+	@param p package name
+	@return list of types in the package
    **/
   public function inPkg(p:String) : List<Reference>
   {
@@ -167,7 +179,9 @@ class Reference
   }
 
   /**
-	separate the package from the type name
+	separate path into package and type name
+	@param path the full path
+	@return package and type names
    **/
   public static function separatePath(path:String)
   {

@@ -23,7 +23,7 @@
 package umlgen.model;
 
 /**
-	an enum
+	a typedef
  **/
 class TypedefModel implements ModelType
 {
@@ -38,6 +38,10 @@ class TypedefModel implements ModelType
 
   private var fields : List<Reference>;
 
+  /**
+	constructor
+	@param p path (package and type name)
+   **/
   public function new(p)
   {
     path = p;
@@ -49,6 +53,7 @@ class TypedefModel implements ModelType
 
   /**
 	add a field
+	@param f the new field
    **/
   public function addField(f)
   {
@@ -57,6 +62,7 @@ class TypedefModel implements ModelType
 
   /**
 	output this type as a dot string
+	@return dot statement
    **/
   public function getDotStr() : String
   {
@@ -67,6 +73,7 @@ class TypedefModel implements ModelType
 
   /**
 	output the params as a dot string
+	@return dot expression
    **/
   private function getFields() : String
   {

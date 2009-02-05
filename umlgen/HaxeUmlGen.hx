@@ -46,6 +46,9 @@ class HaxeUmlGen
   /** foreground color for image **/
   private var fgColor : String;
 
+  /** if true, write chxdoc html files to output directory **/
+  private var forChxdoc : Bool;
+
   /** target package for diagram **/
   public static var pkg(default,null) : String;
 
@@ -68,10 +71,11 @@ class HaxeUmlGen
    **/
   public function new()
   {
-    VERSION = "0.0.2";
+    VERSION = "0.0.3";
     outDir = null;
     bgColor = "white";
     fgColor = "black";
+    forChxdoc = false;
   }
 
   /**
@@ -79,32 +83,40 @@ class HaxeUmlGen
    **/
   public function run()
   {
+    neko.Lib.println("Haxe Uml Generator v" + VERSION + " - (c) 2009 Ian Martins");
+
+    // first check that graphviz is installed
+    checkForDot();
+
     try
     {
-      checkForDot();
       parseArgs(); // parse command line arguemnts
       readXml(); // read input xml file
       callDot(); // write dot input, call dot
     }
     catch (ex:String)
     {
-      neko.Lib.println("Error: " + ex);
-      if( ex=="dot is not installed" )
-	neko.Sys.exit(2);
-      else
-	neko.Sys.exit(1);
+      neko.Lib.println("HaxeUmlGen Error: " + ex);
+      neko.Lib.println("stack: " + haxe.Stack.exceptionStack());
+      neko.Sys.exit(1);
     }
   }
 
   /**
 	first make sure dot is installed and in the path
-	@throws string if dot is not on the execution path
    **/
   private function checkForDot()
   {
-    var ret = new neko.io.Process("dot", ["-V"]);
-    if( ret.exitCode() != 0 )
-      throw "dot is not installed";
+    try
+    {
+      var ret = new neko.io.Process("dot", ["-V"]);
+      ret.exitCode();
+    }
+    catch (ex:String)
+    {
+      neko.Lib.println("HaxeUmlGen Error: Graphviz is not installed");
+      neko.Sys.exit(2);
+    }
   }
 
   /**
@@ -144,6 +156,9 @@ class HaxeUmlGen
       else if( aa.indexOf("--fgcolor=") != -1 )
 	fgColor = aa.substr(10);
 
+      else if( aa=="-c" || aa=="--chxdoc" )
+	forChxdoc = true;
+
       else if( aa == args[args.length-1] )
 	inFname = aa;
 
@@ -172,13 +187,14 @@ class HaxeUmlGen
   {
       if( aa=="-h" || aa=="--help" )
       {
-	neko.Lib.println("HaxeUmlGen v" + VERSION);
+	neko.Lib.println("Haxe Uml Generator v" + VERSION);
 	neko.Lib.println("Usage: haxeumlgen [OPTIONS] [FILE]");
 	neko.Lib.println("Generate UML diagrams for haXe projects");
 	neko.Lib.println("");
 	neko.Lib.println(" -o --outdir=DIR	Change the output directory.  Same as input by default");
 	neko.Lib.println(" -b --bgcolor=COLOR	Set background color");
 	neko.Lib.println(" -f --fgcolor=COLOR	Set foreground color");
+	neko.Lib.println(" -c --chxdoc		Write html files to output directory for chxdoc");
 	neko.Lib.println(" -v --version		Show version and exit");
 	neko.Lib.println(" -h --help		Show this message and exit");
 	neko.Sys.exit(0);
@@ -239,9 +255,33 @@ class HaxeUmlGen
       proc.stdin.writeString(buf.toString());
       proc.stdin.close();
 
-      // check exit code
-      if( proc.exitCode() != 0 )
-	throw "Graphviz failed";
+      // check exit code FIXME why does this fail on windows?
+      //if( proc.exitCode() != 0 ) throw "Graphviz failed";
+
+      if( forChxdoc )
+	writeChxdocHtml(outDir, pkg);
+
+      neko.Lib.print(".");
     }
+    neko.Lib.println("\nComplete.");
+  }
+
+  /**
+	write html file to output directory for chxdoc integration
+	@param outDir output directory where uml images are.
+	@param packageName name of current package
+   **/
+  private function writeChxdocHtml(outDir, packageName)
+  {
+    var fout = neko.io.File.write(outDir + "/" + packageName + ".html", false);
+    fout.writeString("<html>\n");
+    fout.writeString("<head><title>Class Diagram for " + packageName + " Package</title></head>\n");
+    fout.writeString("<body bgcolor=\"" + bgColor + "\">\n");
+    fout.writeString("  <center>\n");
+    fout.writeString("    <img alt=\"Class Diagram for " + packageName + " Packge\" src=\"" + packageName + ".png\">\n");
+    fout.writeString("  </center>\n");
+    fout.writeString("</body>\n");
+    fout.writeString("</html>\n");
+    fout.close();
   }
 }

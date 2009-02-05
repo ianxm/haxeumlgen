@@ -27,8 +27,18 @@ package umlgen.model;
  **/
 interface ModelType
 {
+  /** package and type name **/
   public var path(default,null) : String;
+
+  /** package **/
   public var pkg(default,null) : String;
+
+  /** type name **/
   public var type(default,null) : String;
+
+  /**
+	get this type as a dot string
+	@return dot statements
+   **/
   public function getDotStr() : String;
 }

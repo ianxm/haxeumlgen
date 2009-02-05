@@ -28,11 +28,21 @@ import umlgen.model.TypedefModel;
 import umlgen.model.EnumModel;
 import umlgen.model.Reference;
 
+/**
+	builds data structures to describe the types read from the input xml file.
+ **/
 class InputHandler
 {
+  /**
+	constructor
+   **/
   public function new()
   { }
 
+  /**
+	main function that reads the xml file.
+	@param fname input filename
+   **/
   public function readXml(fname)
   {
     var dataTypes = new List<ModelType>();

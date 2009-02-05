@@ -38,6 +38,10 @@ class EnumModel implements ModelType
 
   private var fields : List<String>;
 
+  /**
+	constructor
+	@param p the path (package and name)
+   **/
   public function new(p)
   {
     path = p;
@@ -49,6 +53,7 @@ class EnumModel implements ModelType
 
   /**
 	add a field to the enum
+	@param f the new field
    **/
   public function addField(f)
   {
@@ -57,6 +62,7 @@ class EnumModel implements ModelType
 
   /**
 	output this type as a dot string
+	@return dot statement 
    **/
   public function getDotStr() : String
   {
@@ -67,6 +73,7 @@ class EnumModel implements ModelType
 
   /**
 	output the params as a dot string
+	@return dot erxpression for all fields
    **/
   private function getFieldsDotStr() : String
   {

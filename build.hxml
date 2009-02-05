@@ -8,5 +8,7 @@
 # build app
 -main umlgen.HaxeUmlGen
 -neko ../bin/haxeumlgen.n
--xml ../bin/umlgen.xml
+-xml ../doc/umlgen.xml
 -cmd nekotools boot ../bin/haxeumlgen.n
+-cmd chxdoc.exe --installTemplate=true --templateDir=u:\haXe\codeblackbox\chxdoc\templates\default --tmpDir=..\doc\tmp -o ..\doc\html ..\doc\umlgen.xml 
+-cmd haxeumlgen -c -b "#101020" -f "#707080" -o ../doc/html/uml ../doc/umlgen.xml

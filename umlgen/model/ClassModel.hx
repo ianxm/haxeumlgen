@@ -47,6 +47,11 @@ class ClassModel implements ModelType
   /** this is a list of super classes **/
   private var parents : List<Reference>;
 
+  /**
+	constructor
+	@param p the class' path (package and class name)
+	@param i if true, this is an interface
+   **/
   public function new(p, i)
   {
     path = p;
@@ -58,13 +63,19 @@ class ClassModel implements ModelType
     parents = new List<Reference>();
   }
 
-  /**	add a super class   **/
+  /**	
+	add a super class
+	@param p this class' parent
+   **/
   public function addParent(p)
   {
     parents.add(p);
   }
 
-  /**	add a field   **/
+  /**	
+	add a field
+	@param f the new field
+   **/
   public function addField(f)
   {
     fields.add(f);
@@ -72,6 +83,7 @@ class ClassModel implements ModelType
 
   /**
 	output the class in dot format.  this also connects it to others
+	@return dot statements for this class
    **/
   public function getDotStr() : String
   {
@@ -98,6 +110,7 @@ class ClassModel implements ModelType
 
   /**
 	output the fields as a dot string
+	@return dot expression for all fields
    **/
   private function getFieldsDotStr() : String
   {
@@ -111,6 +124,7 @@ class ClassModel implements ModelType
 
   /**
 	output the methods as a dot string
+	@return dot expression for all methods
    **/
   private function getMethodsDotStr() : String
   {
@@ -143,6 +157,7 @@ class ClassModel implements ModelType
   }
 
   /**
+	find out if this class has the given reference
 	@return true if this class has the given field
    **/
   public function hasRef(ref:Reference)

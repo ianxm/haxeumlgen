@@ -3,31 +3,36 @@ HaxeUmlGen uses Graphviz to draw the diagram, so graphviz must be
 installed and the binary must be added to the path.  Graphviz is a
 free program that can be found at http://www.graphviz.org.
 
+
 USAGE
 
 HaxeUmlGen uses the xml file created when the -xml flag is passed in
 to the haxe compiler.  After compiling, run
 
-  neko haxeumlgen XMLFILE PACKAGE
+  neko haxeumlgen XMLFILE
 
 where
   XMLFILE is the file that the haxe compiler created
-  PACKAGE is the name of the package to be diagrammed
 
-For example, to generate a diagram of the "some.package" package of
-myproject, compile with
+For example, to generate diagrams of myproject, compile with
 
   haxe -neko myproject.n -xml myproject.xml MyProject.hx
 
-then generate the diagram with
+then generate diagrams with
 
-  neko haxeumlgen myproject.xml some.package
+  neko haxeumlgen myproject.xml
 
-That will create a file called some.package.png in the same directory
-as myproject.xml
+That will create a files called [packagename].png for each package in
+the same directory as myproject.xml
 
 The output directory can be changed with the --outdir command line
 parameter.  Other parameters can be listed with
 
   neko haxeumlgen --help
 
+
+CHXDOC
+
+ChxDoc is a source documentation tool written by Russell Weir.
+HaxeUmlGen can be integrated with chxdoc by following the instructions
+found in the chxdoc directory.

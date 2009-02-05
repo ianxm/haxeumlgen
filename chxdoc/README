@@ -1,0 +1,28 @@
+CHXDOC INTEGRATION
+
+HaxeUmlGen is loosely integrated with ChxDoc.  ChxDoc is a source
+documentation tool written by Russell Weir.  ChxDoc is released under
+a BSD style license.  More info is available at
+http://www.codeblackbox.com/.
+
+The following modifications add an entry for "Class Diagram" to each
+package.
+
+To use ChxDoc and HaxeUmlGen together you must:
+- Copy package.mtt and macros.mtt into the chxdoc templates directory.
+- Compile with the -xml flag
+- Run chxdoc
+- Run haxeumlgen passing the "-c" flag and setting the output
+  directory to "uml" under the chxdoc output directory
+
+For example, compiled with:
+> haxe -xml ../doc/umlgen.xml -neko haxeumlgen.n -main umlgen.HaxeUmlGen
+
+Run chxdoc with:
+> chxdoc -o ../doc/html ../doc/umlgen.xml 
+
+Run haxeumlgen with:
+> haxeumlgen -c -b "#101020" -f "#707080" -o ../doc/html/uml/ ../doc/umlgen.xml
+
+Note that "-b" and "-c" are just to set the diagram colors to match
+the stylesheet I use.

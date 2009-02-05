@@ -1,0 +1,228 @@
+/* CSS reset */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+}
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+body {
+	line-height: 1;
+  	color: #707080;
+	background: #101020;
+}
+ol, ul {
+	list-style: none;
+}
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+caption, th, td {
+	text-align: left;
+	font-weight: normal;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: "";
+}
+blockquote, q {
+	quotes: "" "";
+}
+
+/** STYLE **/
+body {
+	font-family:Tahoma,Verdana,Arial,Helvetica,sans-serif;
+	font-size: 13px;
+}
+
+a, a:active, a:visited {
+	color: #8080d0;
+}
+
+.type-frame {
+	margin: 10px;
+}
+
+#types-frame, #packages-frame {
+	margin: 0px;
+}
+
+ul.types, ul.packages, #packages-header ul{
+	margin: 5px;
+}
+
+code {
+	font-family: "Courier New", Courier, mono;
+}
+
+#types-frame h1, #packages-frame h1 {
+	font-size: 77%;
+	font-weight: bold;
+	padding: 2px;
+	color: #909090;
+	background-color: #303040;
+	text-align: center;
+}
+
+#packages-frame h2 {
+	font-size: 77%;
+	padding: 2px;
+	border-bottom: 1px solid #404050;
+	text-align: center;
+	margin-bottom: 0.75em;
+}
+
+.type-frame h1 {
+	font-size: 140%;
+	font-weight: bold;
+	padding-left: 18px;
+	color: #909090;
+	margin-bottom: 0.75em;
+	background-repeat: no-repeat;
+	min-height: 16px;
+}
+
+ul.types li {
+	background-repeat: no-repeat;
+	min-height: 16px;
+	padding-left: 18px;
+}
+
+.class {
+	background-image: url(images/class.png);
+}
+
+.interface {
+	background-image: url(images/interface.png);
+}
+
+.typedef {
+	background-image: url(images/typedef.png);
+}
+
+.alias {
+	background-image: url(images/alias.png);
+}
+
+.enum {
+	background-image: url(images/enum.png);
+}
+
+.doc {
+	padding: 0 0 0.75em 0;
+	margin: 0.75em 0;
+}
+
+dt {
+	display: block;
+	float: left;
+	width: 80px;
+	font-weight: bold;
+	font-size: 85%;
+	min-height: 1.2em;
+	vertical-align: bottom;
+	border: 1px solid #404050;
+	background: #303040;
+	padding: 2px 2px 2px 4px;
+}
+
+dd {
+	display: block;
+	margin-left: 86px;
+	min-height: 1.2em;
+	padding: 2px 2px 2px 4px;
+	border-top: 1px solid #404050;
+	border-bottom: 1px solid #404050;
+	border-left: 1px solid #404050;
+	font-size: 85%;
+	color: #505060;
+}
+
+pre {
+	border-top: 1px dashed #404050;
+	border-bottom: 1px dashed #404050;
+	font-family: "Courier New", Courier, mono;
+	font-weight: normal;
+	padding: 0.75em 0 0 0;
+	margin: 0.75em 0;
+	font-size: 85%;
+}
+
+.members-panel {
+	border: 1px solid #404050;
+	margin-bottom: 0.75em;
+}
+
+.members-panel h2 {
+	border-top: 1px solid #404050;
+	border-bottom: 1px solid #404050;
+	background-color: #303040;
+	padding: 2px 4px;
+	font-weight: bold;
+	font-size: 85%;
+}
+
+.member .header {
+	padding: 8px 4px 4px;
+	color: #909090;
+	font-size: 87%;
+}
+
+.member .header .name {
+  	color: #a08070;
+	font-size: 135%;
+	font-weight: bold;
+}
+
+.member .body {
+	padding: 4px 16px 8px;
+}
+
+.member .platforms {
+	padding: 4px 16px;
+}
+
+.member .platforms-list {
+	padding: 4px 16px;
+	font-weight: bold;
+}
+
+#packages-frame li, #types-frame li {
+	background-repeat: no-repeat;
+	min-height: 16px;
+	padding-left: 18px;
+}
+
+#packages-frame ul.packages li {
+	background-image: url(images/package.png);
+}
+
+#packages-header li {
+	font-weight: bold;
+	font-size: 85%;
+}
+
+div.inherited, div.overrides {
+	margin: 2px 0;
+}
+
+.deprecated {
+	color: #c03030;
+}

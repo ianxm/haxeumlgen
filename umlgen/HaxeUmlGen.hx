@@ -173,10 +173,24 @@ class HaxeUmlGen
     }
 
     if( !neko.FileSystem.exists(inFname) )
-      throw "Error: Input file doesn't exist";
+      throw "Input file doesn't exist";
+
+    if( outDir.charAt(outDir.length-1) == "/" || outDir.charAt(outDir.length-1) == "\\" )
+      outDir = outDir.substr(0, outDir.length-1);
 
     if( !neko.FileSystem.exists(outDir) )
-      throw "Error: Output directory doesn't exist";
+      makeOutDir(outDir);
+  }
+
+  private function makeOutDir(outDir)
+  {
+    var parentDir = new neko.io.Path(outDir).dir;
+    if( !neko.FileSystem.exists(parentDir) )
+      throw "Parent of output directory doesn't exist: " + parentDir;
+
+    neko.FileSystem.createDirectory(outDir);
+    if( !neko.FileSystem.exists(outDir) )
+      throw "Couldn't create output directory: " + outDir;
   }
 
   /**

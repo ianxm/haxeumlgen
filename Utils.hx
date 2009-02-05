@@ -22,7 +22,7 @@
 
 import Type;
 
-class SLambda
+class Utils
 {
   /**
 	find first item in an iterable. return null if it doesn't exist. 

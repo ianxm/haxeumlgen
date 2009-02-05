@@ -37,8 +37,14 @@ class HaxeUmlGen
   /** input filename (xml file from haxe compiler) **/
   private var inFname : String;
 
-  /** output directory. if not set, same as input file  **/
+  /** output directory. if not set, same as input file **/
   private var outDir : String;
+
+  /** background color for image **/
+  private var bgColor : String;
+
+  /** foreground color for image **/
+  private var fgColor : String;
 
   /** target package for diagram **/
   public static var pkg(default,null) : String;
@@ -62,8 +68,10 @@ class HaxeUmlGen
    **/
   public function new()
   {
-    VERSION = "0.0.1";
+    VERSION = "0.0.2";
     outDir = null;
+    bgColor = "white";
+    fgColor = "black";
   }
 
   /**
@@ -122,6 +130,18 @@ class HaxeUmlGen
       else if( aa.indexOf("--outdir=") != -1 )
 	outDir = aa.substr(9);
 
+      else if( aa=="-b" )
+	bgColor = iter.next();
+
+      else if( aa.indexOf("--bgcolor=") != -1 )
+	bgColor = aa.substr(10);
+
+      else if( aa=="-f" )
+	fgColor = iter.next();
+      
+      else if( aa.indexOf("--fgcolor=") != -1 )
+	fgColor = aa.substr(10);
+
       else if( aa == args[args.length-2] )
 	inFname = aa;
 
@@ -157,6 +177,8 @@ class HaxeUmlGen
 	neko.Lib.println("Generate UML diagrams for haXe projects");
 	neko.Lib.println("");
 	neko.Lib.println(" -o --outdir=DIR	Change the output directory.  Same as input by default");
+	neko.Lib.println(" -b --bgcolor=COLOR	Set background color");
+	neko.Lib.println(" -f --fgcolor=COLOR	Set foreground color");
 	neko.Lib.println(" -v --version		Show version and exit");
 	neko.Lib.println(" -h --help		Show this message and exit");
 	neko.Sys.exit(0);
@@ -193,8 +215,9 @@ class HaxeUmlGen
     buf.add('        label = "Package: ' + pkg + '";\n');
     buf.add('        fontname = "Sans";\n');
     buf.add('        fontsize = "8";\n');
-    buf.add('        node [ fontname="Sans", fontsize=8, shape="record" ]\n');
-    buf.add('        edge [ fontname="Sans", fontsize=8, minlen=3 ]\n');
+    buf.add('        bgcolor = "' + bgColor + '";\n');
+    buf.add('        node [ fontname="Sans", fontsize=8, shape="record", color="' + fgColor + '", fontcolor="' + fgColor + '" ]\n');
+    buf.add('        edge [ fontname="Sans", fontsize=8, minlen=3, color="' + fgColor + '", fontcolor="' + fgColor + '" ]\n');
     for( dd in boxes )
       buf.add(dd.getDotStr() + '\n');
     buf.add('}\n');

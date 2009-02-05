@@ -129,7 +129,7 @@ class ClassModel implements ModelType
   {
     for( pp in parents )
     {
-      var pobj = SLambda.findFirst(HaxeUmlGen.dataTypes, function(dd) { return dd.path==pp.path; });
+      var pobj = Utils.findFirst(HaxeUmlGen.dataTypes, function(dd) { return dd.path==pp.path; });
       if( pobj == null )
 	throw "parent not found";
 

@@ -24,7 +24,7 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 body {
 	line-height: 1;
   	color: #707080;
-	background: #101020;
+	background: #202030;
 }
 ol, ul {
 	list-style: none;
@@ -37,6 +37,10 @@ table {
 caption, th, td {
 	text-align: left;
 	font-weight: normal;
+	padding: 4px;
+}
+.comment {
+	width: 600px;
 }
 blockquote:before, blockquote:after,
 q:before, q:after {

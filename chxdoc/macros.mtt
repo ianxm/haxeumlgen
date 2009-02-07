@@ -10,7 +10,7 @@
 
 	<macro name="methodHeader(m)">
 		<h3>
-			<a name="::raw m.name::()"></a>$$showAccess(::m::)$$showDynamic(::m::)<span class="name">::raw m.name::</span>::m.params::(::if m.args != null::::raw m.args::::end::) : ::raw m.returns::
+			<a name="::raw m.name::()"></a>$$showAccess(::m::)$$showDynamic(::m::)<span class="name">::raw m.name:: </span>::m.params::(::if m.args != null::::raw m.args::::end::) : ::raw m.returns::
 		</h3>
 			::if m.isOverride::
 				<div class="overrides">overrides</div>
@@ -22,11 +22,11 @@
 	<macro name="methodDocs(m)">
 		<!-- Comment block -->
 		::if m.docs != null && m.docs.comments != null::
-			<table><tr><td width="700">
+			<table><tr><td>
 			<div class="comment">::raw m.docs.comments::</div></td>
 
 			::if m.platforms != null::
-				<td width="500">
+				<td>
 				<dl>
 				::if m.docs != null::
 					<!-- deprecated -->
@@ -108,7 +108,7 @@
 
 	<macro name="varHeader(f)">
 		<h3>
-			<a name="::f.name::"></a>$$showAccess(::f::)<span class="name">::f.name::</span>::raw f.rights:: : ::raw f.returns::
+			<a name="::f.name::"></a>$$showAccess(::f::)<span class="name">::f.name:: </span>::raw f.rights:: : ::raw f.returns::
 		</h3>
 		::if f.isInherited::
 		<div class="inherited">inherited from <a href="::raw f.inheritance.link.href::#::f.name::">::raw f.inheritance.link.text::</a></div>

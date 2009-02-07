@@ -10,5 +10,5 @@
 -neko ../bin/haxeumlgen.n
 -xml ../doc/umlgen.xml
 -cmd nekotools boot ../bin/haxeumlgen.n
--cmd chxdoc.exe --installTemplate=true --templateDir=u:\haXe\codeblackbox\chxdoc\templates\default --tmpDir=..\doc\tmp -o ..\doc\html ..\doc\umlgen.xml 
--cmd neko ../bin/haxeumlgen -c -b "#101020" -f "#707080" -o ../doc/html/uml/ ../doc/umlgen.xml
+-cmd chxdoc --templateDir=/usr/local/chxdoc_0_7_3/templates/mine/ --installTemplate=true --title="HaxeUmlGen" --subtitle="UML for HaXe" --tmpDir=../doc/tmp -o ../doc/html ../doc/umlgen.xml
+-cmd neko ../bin/haxeumlgen -c -b "#202030" -f "#707080" -o ../doc/html/uml/ ../doc/umlgen.xml

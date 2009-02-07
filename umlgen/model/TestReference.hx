@@ -41,16 +41,16 @@ class TestReference extends haxe.unit.TestCase
   public function testReferenceFuncEmpty()
   {
     var field = new Reference("aFunc", "Foo", true, false);
-    assertEquals("- aFunc() : Foo\\l", field.getFieldStr());
-    assertEquals("aFunc() : Foo", field.getParamStr());
+    assertEquals("- aFunc () : Foo\\l", field.getFieldStr());
+    assertEquals("aFunc () : Foo", field.getParamStr());
   }
 
   public function testReferenceFuncOne()
   {
     var field = new Reference("aFunc", "some.Foo", true, false);
     field.addParam(new Reference("aParam", "some.Int"));
-    assertEquals("- aFunc(aParam : some.Int) : some.Foo\\l", field.getFieldStr());
-    assertEquals("aFunc(aParam : some.Int) : some.Foo", field.getParamStr());
+    assertEquals("- aFunc (aParam : some.Int) : some.Foo\\l", field.getFieldStr());
+    assertEquals("aFunc (aParam : some.Int) : some.Foo", field.getParamStr());
   }
 
   public function testReferenceFuncTwo()
@@ -58,7 +58,7 @@ class TestReference extends haxe.unit.TestCase
     var field = new Reference("aFunc", "Foo", true, false);
     field.addParam(new Reference("aParam", "Int"));
     field.addParam(new Reference("anotherParam", "some.Boat"));
-    assertEquals("- aFunc(aParam : Int, anotherParam : some.Boat) : Foo\\l", field.getFieldStr());
-    assertEquals("aFunc(aParam : Int, anotherParam : some.Boat) : Foo", field.getParamStr());
+    assertEquals("- aFunc (aParam : Int, anotherParam : some.Boat) : Foo\\l", field.getFieldStr());
+    assertEquals("aFunc (aParam : Int, anotherParam : some.Boat) : Foo", field.getParamStr());
   }
 }

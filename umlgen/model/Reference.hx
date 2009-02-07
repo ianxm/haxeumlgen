@@ -140,7 +140,7 @@ class Reference
     if (!isFunc) return "";
 
     var strBuf = new StringBuf();
-    strBuf.add("(");
+    strBuf.add(" (");
     for( pp in params )
       if( pp != params.last() )
 	strBuf.add(pp.getParamStr() + ", ");

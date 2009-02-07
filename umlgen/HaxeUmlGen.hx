@@ -252,6 +252,7 @@ class HaxeUmlGen
       buf.add('        fontname = "Sans";\n');
       buf.add('        fontsize = "8";\n');
       buf.add('        bgcolor = "' + bgColor + '";\n');
+      buf.add('	       fontcolor = "' + fgColor + '";\n');
       buf.add('        node [ fontname="Sans", fontsize=8, shape="record", color="' + fgColor + '", fontcolor="' + fgColor + '" ]\n');
       buf.add('        edge [ fontname="Sans", fontsize=8, minlen=3, color="' + fgColor + '", fontcolor="' + fgColor + '" ]\n');
       for( dd in boxes )

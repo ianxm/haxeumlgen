@@ -56,7 +56,7 @@ class HaxeUmlGen
   public static var dataTypes(default,null) : List<ModelType>;
 
   /** current app version **/
-  private var VERSION : String;
+  private static var VERSION = "0.0.4";
 
   /**
 	this is the main function.
@@ -71,7 +71,6 @@ class HaxeUmlGen
    **/
   public function new()
   {
-    VERSION = "0.0.3";
     outDir = null;
     bgColor = "white";
     fgColor = "black";

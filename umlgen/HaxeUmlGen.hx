@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, Ian Martins
+ * Copyright (c) 2009-2010, Ian Martins
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -22,6 +22,7 @@
 
 package umlgen;
 
+using StringTools;
 import umlgen.model.ModelType;
 
 /**
@@ -56,7 +57,7 @@ class HaxeUmlGen
   public static var dataTypes(default,null) : List<ModelType>;
 
   /** current app version **/
-  private static var VERSION = "0.0.4";
+  private static var VERSION = "0.0.5";
 
   /**
 	this is the main function.
@@ -82,7 +83,7 @@ class HaxeUmlGen
    **/
   public function run()
   {
-    neko.Lib.println("HaxeUmlGen v" + VERSION + " - (c) 2009 Ian Martins");
+    neko.Lib.println("HaxeUmlGen v" + VERSION + " - (c) 2010 Ian Martins");
 
     // first check that graphviz is installed
     checkForDot();
@@ -147,10 +148,18 @@ class HaxeUmlGen
 	bgColor = iter.next();
 
       else if( aa.indexOf("--bgcolor=") != -1 )
+      {
 	bgColor = aa.substr(10);
+	if( !bgColor.startsWith("#") )
+	  bgColor = "#" + bgColor;
+      }
 
       else if( aa=="-f" )
+      {
 	fgColor = iter.next();
+	if( !fgColor.startsWith("#") )
+	  fgColor = "#" + fgColor;
+      }
       
       else if( aa.indexOf("--fgcolor=") != -1 )
 	fgColor = aa.substr(10);
@@ -158,8 +167,12 @@ class HaxeUmlGen
       else if( aa=="-c" || aa=="--chxdoc" )
 	forChxdoc = true;
 
-      else if( aa == args[args.length-1] )
+      else if( inFname==null && aa==args[args.length-1] || aa==args[args.length-2] )
 	inFname = aa;
+
+      else if( aa == args[args.length-1] )
+	if( neko.FileSystem.exists(aa) && neko.FileSystem.isDirectory(aa) )
+	    neko.Sys.setCwd(aa);
 
       else
 	throw "Unknown option: " + aa;

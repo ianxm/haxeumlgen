@@ -1,14 +1,13 @@
 # build and run tests
 -main umlgen.TestSuite
--neko ../bin/tests.n
--cmd neko ../bin/tests.n
+-neko bin/tests.n
+-cmd neko bin/tests.n
 
 --next
 
 # build app
 -main umlgen.HaxeUmlGen
--neko ../bin/haxeumlgen.n
--xml ../doc/umlgen.xml
--cmd nekotools boot ../bin/haxeumlgen.n
--cmd chxdoc --templateDir=/usr/local/chxdoc_0_7_3/templates/mine/ --installTemplate=true --title="HaxeUmlGen" --subtitle="UML for HaXe" --tmpDir=../doc/tmp -o ../doc/html ../doc/umlgen.xml
--cmd neko ../bin/haxeumlgen -c -b "#202030" -f "#707080" -o ../doc/html/uml/ ../doc/umlgen.xml
+-neko bin/run.n
+-xml doc/umlgen.xml
+#-cmd chxdoc --templateDir=/usr/local/chxdoc_0_7_3/templates/mine/ --installTemplate=true --title="HaxeUmlGen" --subtitle="UML for HaXe" --tmpDir=doc/tmp -o doc doc/umlgen.xml
+-cmd haxelib run HaxeUmlGen -b 202030 -f 707080 -o doc/uml/ doc/umlgen.xml

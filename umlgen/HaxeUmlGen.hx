@@ -50,6 +50,9 @@ class HaxeUmlGen
   /** if true, write chxdoc html files to output directory **/
   private var forChxdoc : Bool;
 
+  /** if true, don't output anything to the console **/
+  public static var quiet : Bool;
+
   /** target package for diagram **/
   public static var pkg(default,null) : String;
 
@@ -57,7 +60,7 @@ class HaxeUmlGen
   public static var dataTypes(default,null) : List<ModelType>;
 
   /** current app version **/
-  private static var VERSION = "0.0.5";
+  private static var VERSION = "0.0.6";
 
   /**
 	this is the main function.
@@ -83,14 +86,16 @@ class HaxeUmlGen
    **/
   public function run()
   {
-    neko.Lib.println("HaxeUmlGen v" + VERSION + " - (c) 2010 Ian Martins");
-
     // first check that graphviz is installed
     checkForDot();
 
     try
     {
       parseArgs(); // parse command line arguemnts
+
+      if( !quiet )
+	neko.Lib.println("HaxeUmlGen v" + VERSION + " - (c) 2010 Ian Martins");
+
       readXml(); // read input xml file
       callDot(); // write dot input, call dot
     }
@@ -146,6 +151,9 @@ class HaxeUmlGen
 
       else if( aa=="-b" )
 	bgColor = iter.next();
+
+      else if( aa=="-q" || aa=="--quiet" )
+	quiet = true;
 
       else if( aa.indexOf("--bgcolor=") != -1 )
       {
@@ -220,6 +228,7 @@ class HaxeUmlGen
 	neko.Lib.println(" -b --bgcolor=COLOR	Set background color");
 	neko.Lib.println(" -f --fgcolor=COLOR	Set foreground color");
 	neko.Lib.println(" -c --chxdoc		Write html files to output directory for chxdoc");
+	neko.Lib.println(" -q --quiet		Don't output to console");
 	neko.Lib.println(" -v --version		Show version and exit");
 	neko.Lib.println(" -h --help		Show this message and exit");
 	neko.Sys.exit(0);
@@ -279,14 +288,16 @@ class HaxeUmlGen
       proc.stdin.close();
 
       // check exit code FIXME why does this fail on windows?
-      //if( proc.exitCode() != 0 ) throw "Graphviz failed";
+      if( proc.exitCode() != 0 ) throw "Graphviz failed";
 
       if( forChxdoc )
 	writeChxdocHtml(outDir, pkg);
 
-      neko.Lib.print(".");
+      if( !quiet )
+	neko.Lib.print(".");
     }
-    neko.Lib.println("\nComplete.");
+    if( !quiet )
+      neko.Lib.println("\nComplete.");
   }
 
   /**

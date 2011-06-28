@@ -116,7 +116,7 @@ class Reference
      * @return dot expression for a parameter
      */
     public function getParamStr() : String 
-    {
+    { 
         var type = ( pkg == HaxeUmlGen.pkg ) ? type : path;
         return name + getFuncParams() + " : " + type + getTParamsStr();
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2010, Ian Martins
+ * Copyright (c) 2009-2011, Ian Martins and Daniel Kuschny
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -24,6 +24,10 @@ package umlgen;
 
 using StringTools;
 import umlgen.model.ModelType;
+import umlgen.model.Package;
+import umlgen.handler.IOutputHandler;
+import umlgen.handler.GraphvizOutputHandler;
+import umlgen.handler.XmiOutputHandler;
 
 /**
  * The haxe uml generator dynamically creates class diagrams for haxe projects.
@@ -42,22 +46,12 @@ class HaxeUmlGen
     /**
      * output directory. if not set, same as input file
      */
-    private var outDir : String;
+    public var outDir(default, null) : String;
 
     /**
-     * background color for image
+     * The output handler to use for generation.
      */
-    private var bgColor : String;
-
-    /**
-     * foreground color for image
-     */
-    private var fgColor : String;
-
-    /**
-     * if true, write chxdoc html files to output directory
-     */
-    private var forChxdoc : Bool;
+    private var handler : IOutputHandler;
 
     /**
      * if true, don't output anything to the console
@@ -65,19 +59,27 @@ class HaxeUmlGen
     public static var quiet : Bool;
 
     /**
-     * target package for diagram
-     */
-    public static var pkg( default, null ) : String;
-
-    /**
      * list of data types
      */
     public static var dataTypes( default, null ) : List<ModelType>;
+    
+    /** 
+     * target package for diagram
+     */  
+    public static var pkg(default,null) : String;
+    
 
     /**
      * current app version
      */
-    private static var VERSION = "0.0.6";
+    private static var VERSION = "0.0.7";
+    
+    private static var AVAILABLE_HANDLERS = {
+    	var h:Hash<Class<IOutputHandler>> = new Hash<Class<IOutputHandler>>();
+    	h.set("dot", GraphvizOutputHandler);
+    	h.set("xmi", XmiOutputHandler);
+    	h;
+    }
 
     /**
      * this is the main function.
@@ -93,9 +95,6 @@ class HaxeUmlGen
     public function new() 
     {
         outDir = null;
-        bgColor = "white";
-        fgColor = "black";
-        forChxdoc = false;
     }
 
     /**
@@ -103,16 +102,21 @@ class HaxeUmlGen
      */
     public function run() 
     {
-        // first check that graphviz is installed
-        checkForDot();
         try 
         {
-            parseArgs(); // parse command line arguemnts
-
-            if( !quiet ) 
-                neko.Lib.println( "HaxeUmlGen v" + VERSION + " - (c) 2010 Ian Martins" );            
-            readXml(); // read input xml file
-            callDot(); // write dot input, call dot
+        	// parse command line arguemnts
+            parseArgs(); 
+            
+            printInfo();
+            
+            // let the handler check the requirements
+            handler.checkRequirements(this);
+            
+            // read the input xml file
+            readXml(); 
+            
+            // call the handler
+            callHandler(); 
         } catch( ex : String )  
         {
             neko.Lib.println( "HaxeUmlGen Error: " + ex );
@@ -120,21 +124,24 @@ class HaxeUmlGen
             neko.Sys.exit( 1 );
         }
     }
-
+    
     /**
-     * first make sure dot is installed and in the path
+     * Logs the specified string to the console if quiet is not enabled
+     * @param out the text to print
      */
-    private function checkForDot() 
+    public function log(out:String) : Void
     {
-        try 
-        {
-            var ret = new neko.io.Process( "dot", [ "-V" ] );
-            ret.exitCode();
-        } catch( ex : String )  
-        {
-            neko.Lib.println( "HaxeUmlGen Error: Graphviz is not installed" );
-            neko.Sys.exit( 2 );
-        }
+    	if(!quiet)
+    	   neko.Lib.println(out);
+    }
+    
+    /**
+     * Prints the application information
+     */
+    private function printInfo() : Void
+    {
+        // some info
+        log( "HaxeUmlGen v" + VERSION + " - (c) 2011 Ian Martins, Daniel Kuschny" );    
     }
 
     /**
@@ -144,51 +151,61 @@ class HaxeUmlGen
     private function parseArgs() 
     {
         var args = neko.Sys.args();
-        if( args.length < 1 ) 
+        if( args.length < 2 ) 
         {
+        	printInfo();
             checkHelpVer( args[0] );
-            throw ( "Not enough arguments" );
+            neko.Sys.exit(1);
         }
+        
         var iter = args.iterator();
+         
+        // read an create the output handler
+        var mode = iter.next();
+        if(AVAILABLE_HANDLERS.exists(mode))
+        {
+            handler = Type.createInstance(AVAILABLE_HANDLERS.get(mode), []);
+        }
+        else
+        {
+            throw "invalid output mode: " + mode;
+        }
+        
+        // read the rest of the commands
         while( iter.hasNext() ) 
         {
             var aa = iter.next();
-            checkHelpVer( aa );
+            checkHelpVer( aa , false);
+            
             if( aa == "-o" ) 
                 outDir = iter.next();
             else if( aa.indexOf( "--outdir=" ) != -1 ) 
                 outDir = aa.substr( 9 );
-            else if( aa == "-b" ) 
-                bgColor = iter.next();
             else if( aa == "-q" || aa == "--quiet" ) 
                 quiet = true;
-            else if( aa.indexOf( "--bgcolor=" ) != -1 ) 
-            {
-                bgColor = aa.substr( 10 );
-                if( !bgColor.startsWith( "#" ) ) 
-                    bgColor = "#" + bgColor;                
-            } else if( aa == "-f" ) 
-            {
-                fgColor = iter.next();
-                if( !fgColor.startsWith( "#" ) ) 
-                    fgColor = "#" + fgColor;                
-            } else if( aa.indexOf( "--fgcolor=" ) != -1 ) 
-                fgColor = aa.substr( 10 );
-            else if( aa == "-c" || aa == "--chxdoc" ) 
-                forChxdoc = true;
             else if( inFname == null && aa == args[args.length - 1] || aa == args[args.length - 2] ) 
                 inFname = aa;
             else if( aa == args[args.length - 1] ) 
                 if( neko.FileSystem.exists( aa ) && neko.FileSystem.isDirectory( aa ) ) 
                     neko.Sys.setCwd( aa );
                 else
-                    throw "Unknown option: " + aa;            
+                    throw "Unknown option: " + aa;
+            else if(handler.processArg(aa, iter, this))
+            {}
+            else
+            {
+            	throw "Unknown option: " + aa;          
+            }
         }
+        
+        // use current dir if none was specified
         if( outDir == null ) 
         {
             var indx = inFname.lastIndexOf( "/" );
             outDir = ( indx == -1 ) ? "." : inFname.substr( 0, indx );
         }
+        
+        // check data
         if( !neko.FileSystem.exists( inFname ) ) 
             throw "Input file doesn't exist";        
         if( outDir.charAt( outDir.length - 1 ) == "/" || outDir.charAt( outDir.length - 1 ) == "\\" ) 
@@ -197,12 +214,14 @@ class HaxeUmlGen
             makeOutDir( outDir );        
     }
 
-    private function makeOutDir( outDir ) 
+    /**
+     * Ensures the specified output directory exists. 
+     * @param outDir the path to the directory to create if not existing
+     */
+    private function makeOutDir( outDir:String ) 
     {
-        var parentDir = new neko.io.Path( outDir ).dir;
-        if( !neko.FileSystem.exists( parentDir ) ) 
-            throw "Parent of output directory doesn't exist: " + parentDir;        
-        neko.FileSystem.createDirectory( outDir );
+        if( !neko.FileSystem.exists( outDir ) ) 
+            neko.FileSystem.createDirectory( outDir );
         if( !neko.FileSystem.exists( outDir ) ) 
             throw "Couldn't create output directory: " + outDir;        
     }
@@ -211,23 +230,44 @@ class HaxeUmlGen
      * check for help or version flag.  if found, display output and exit.
      * @param aa current command line arg
      */
-    private function checkHelpVer( aa ) 
+    private function checkHelpVer( aa, printError:Bool = true ) 
     {
         if( aa == "-h" || aa == "--help" ) 
         {
-            neko.Lib.println( "Usage: haxeumlgen [OPTIONS] [FILE]" );
+            neko.Lib.println( "Usage: haxeumlgen MODE [OPTIONS] [FILE]" );
             neko.Lib.println( "Generate UML diagrams for haXe projects" );
-            neko.Lib.println( "" );
-            neko.Lib.println( " -o --outdir=DIR    Change the output directory.  Same as input by default" );
-            neko.Lib.println( " -b --bgcolor=COLOR    Set background color" );
-            neko.Lib.println( " -f --fgcolor=COLOR    Set foreground color" );
-            neko.Lib.println( " -c --chxdoc        Write html files to output directory for chxdoc" );
-            neko.Lib.println( " -q --quiet        Don't output to console" );
-            neko.Lib.println( " -v --version        Show version and exit" );
-            neko.Lib.println( " -h --help        Show this message and exit" );
+            neko.Lib.println( "  Modes:" );
+            
+            // print descriptions of all handlers
+            for(key in AVAILABLE_HANDLERS.keys())
+            {
+            	var cl:Class<IOutputHandler> = AVAILABLE_HANDLERS.get(key);
+            	var getDescription:Dynamic = Reflect.field(cl, "getDescription");
+            	var description:String = Reflect.callMethod(cl, getDescription, []);
+            	neko.Lib.println( "    " + key + " - " + description );
+            }
+            
+            neko.Lib.println( "  Global Options:" );
+            neko.Lib.println( "    -o --outdir=DIR Change the output directory.  Same as input by default" );
+            neko.Lib.println( "    -q --quiet      Don't output to console" );
+            neko.Lib.println( "    -v --version    Show version and exit" );
+            neko.Lib.println( "    -h --help       Show this message and exit" );
+            
+            // let the handlers print their help string for additional arguments
+            for(key in AVAILABLE_HANDLERS.keys())
+            {
+                var cl:Class<IOutputHandler> = AVAILABLE_HANDLERS.get(key);
+                var printHelp:Dynamic = Reflect.field(cl, "printHelp");
+                Reflect.callMethod(cl, printHelp, []);
+            }
             neko.Sys.exit( 0 );
         } else if( aa == "-v" || aa == "--version" ) 
-            neko.Sys.exit( 0 );        
+            neko.Sys.exit( 0 );  
+        else if(printError)
+        {
+            log("too few arguments");
+            log("try `HaxeUmlGen --help` for more information");      
+        }
     }
 
     /**
@@ -239,83 +279,25 @@ class HaxeUmlGen
     }
 
     /**
-     * call dot.  this writes the dot input file and makes a system call to run dot.
-     * @throws string if specified package isn't found or dot fails
+     * Prepares the read xml data and calles the current handler. 
      */
-    private function callDot() 
+    private function callHandler() 
     {
-        // get list of packages
-        var packages = new List<String>();
+        // prepare of packages
+        var packages:Hash<Package> = new Hash<Package>();
         for( dd in dataTypes )
-            if( !Lambda.exists( packages, function ( pp ) 
-            {
-                return pp == dd.pkg;
-            } ) ) 
-                packages.add( dd.pkg );
-
-                // generate a diagram for each package
-        for( pp in packages ) 
         {
-            pkg = pp;
-            var boxes = dataTypes.filter( function ( dd ) 
-            {
-                return dd.pkg == pkg;
-            } );
-            if( boxes.isEmpty() ) 
-                throw "No classes found in the desired package";
-
-                // write dot commands to string buffer
-            var buf = new StringBuf();
-            buf.add( 'digraph uml\n' );
-            buf.add( '{\n' );
-            buf.add( '        label = "Package: ' + pkg + '";\n' );
-            buf.add( '        fontname = "Sans";\n' );
-            buf.add( '        fontsize = "8";\n' );
-            buf.add( '        bgcolor = "' + bgColor + '";\n' );
-            buf.add( '           fontcolor = "' + fgColor + '";\n' );
-            buf.add( '        node [ fontname="Sans", fontsize=8, shape="record", color="' + fgColor + '", fontcolor="' + fgColor + '" ]\n' );
-            buf.add( '        edge [ fontname="Sans", fontsize=8, minlen=3, color="' + fgColor + '", fontcolor="' + fgColor + '" ]\n' );
-            for( dd in boxes )
-                buf.add( dd.getDotStr() + '\n' );
-            buf.add( '}\n' );
-
-            // call dot, pass string buffer to stdin
-            if( pkg == "" ) 
-                pkg = "Root";            
-            var pngFname = outDir + "/" + pkg + ".png";
-            var proc = new neko.io.Process( 'dot', [ '-Tpng', '-o', pngFname ] );
-            proc.stdin.writeString( buf.toString() );
-            proc.stdin.close();
-
-            // check exit code FIXME why does this fail on windows?
-            if( proc.exitCode() != 0 ) 
-                throw "Graphviz failed";            
-            if( forChxdoc ) 
-                writeChxdocHtml( outDir, pkg );            
-            if( !quiet ) 
-                neko.Lib.print( "." );            
+        	if(!packages.exists(dd.pkg))
+        	{
+        		packages.set(dd.pkg, new Package(dd.pkg));
+        	}
+        	
+        	var pkg:Package = packages.get(dd.pkg);
+        	pkg.addDataType(dd);
         }
-        if( !quiet ) 
-            neko.Lib.println( "\nComplete." );        
-    }
-
-    /**
-     * write html file to output directory for chxdoc integration
-     * @param outDir output directory where uml images are.
-     * @param packageName name of current package
-     */
-    private function writeChxdocHtml( outDir, packageName ) 
-    {
-        var fout = neko.io.File.write( outDir + "/" + packageName + ".html", false );
-        fout.writeString( "<html>\n" );
-        fout.writeString( "<head><title>Class Diagram for " + packageName + " Package</title></head>\n" );
-        fout.writeString( "<body bgcolor=\"" + bgColor + "\">\n" );
-        fout.writeString( "  <center>\n" );
-        fout.writeString( "    <img alt=\"Class Diagram for " + packageName + " Packge\" src=\"" + packageName + ".png\">\n" );
-        fout.writeString( "  </center>\n" );
-        fout.writeString( "</body>\n" );
-        fout.writeString( "</html>\n" );
-        fout.close();
+        
+        // call the handler
+        handler.run(packages, this);
     }
 
 }

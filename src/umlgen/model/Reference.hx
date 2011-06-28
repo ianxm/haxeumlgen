@@ -3,13 +3,13 @@
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
- *   - Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *   - Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *
+ * 
+ * - Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ * - Redistributions in binary form must reproduce the above copyright
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE HAXE PROJECT CONTRIBUTORS
@@ -24,172 +24,195 @@ package umlgen.model;
 
 import umlgen.HaxeUmlGen;
 
-class Reference
+class Reference 
 {
-  /** package and type, for functions this is the return type **/
-  public var path(default,default) : String;
+    /**
+     * package and type, for functions this is the return type
+     */
+    public var path( default, default ) : String;
 
-  /** package **/
-  public var pkg(default,null) : String;
+    /**
+     * package
+     */
+    public var pkg( default, null ) : String;
 
-  /** class name **/
-  public var type(default,null) : String;
+    /**
+     * class name
+     */
+    public var type( default, null ) : String;
 
-  /** variable name **/
-  public var name(default,null) : String;
+    /**
+     * variable name
+     */
+    public var name( default, null ) : String;
 
-  /** true if variable is static **/
-  private var isStatic : Bool;
+    /**
+     * true if variable is static
+     */
+    private var isStatic : Bool;
 
-  /** public or private, stored as symbol **/
-  private var protection : String;
+    /**
+     * public or private, stored as symbol
+     */
+    private var protection : String;
 
-  /** return true if this references a function **/
-  public var isFunc(default,null):Bool;
+    /**
+     * return true if this references a function
+     */
+    public var isFunc( default, null ) : Bool;
 
-  /** type parameter **/
-  private var tParams : List<Reference>;
+    /**
+     * type parameter
+     */
+    private var tParams : List<Reference>;
 
-  /** list of params if this is a function **/
-  private var params : List<Reference>;
+    /**
+     * list of params if this is a function
+     */
+    private var params : List<Reference>;
 
-  /**
-	constructor
-	@param n name
-	@param p path
-	@param f if true, function
-	@param s if true, static
-	@param pr protection
-   **/
-  public function new(n, p, ?f=false, ?pr=false, ?s=false)
-  {
-    name = n;
-    path = p;
-    var pathSep = Reference.separatePath(path);
-    pkg = pathSep.pkg;
-    type = pathSep.type;
-    isFunc = f;
-    protection = (pr) ? "+" : "-";
-    isStatic = s;
-    params = (isFunc) ? new List<Reference>() : null;
-    tParams = new List<Reference>();
-  }
-
-  /**	
-	add a param
-	@param r new param
-   **/
-  inline public function addParam(r)
-  {	params.add(r);  }
-
-  /**	
-	add a type param
-	@param r new type param
-   **/
-  inline public function addTParam(r)
-  {	tParams.add(r);  }
-
-  /**
-	output this type as a function parameter
-	@return dot expression for a parameter
-   **/
-  public function getParamStr() : String
-  {
-    var type = (pkg == HaxeUmlGen.pkg) ? type : path;
-    return name + getFuncParams() + " : " + type + getTParamsStr();
-  }
-
-  /**
-	output this type as a class field
-	@return dot expression for a field
-	@todo underline statics
-   **/
-  public function getFieldStr() : String
-  {
-    var type = (pkg == HaxeUmlGen.pkg) ? type : path;
-    return protection + " " + name + getFuncParams() + " : " + type + getTParamsStr() + "\\l";
-  }
-
-  /**
-	get type params for field str
-	@return dot expression for a type parameter
-   **/
-  private function getTParamsStr() : String
-  {
-    if( tParams.isEmpty() )
-      return "";
-    var strBuf = new StringBuf();
-    strBuf.add("\\<");
-    for( pp in tParams )
+    /**
+     * constructor
+     * @param n name
+     * @param p path
+     * @param f if true, function
+     * @param s if true, static
+     * @param pr protection
+     */
+    public function new( n, p, ?f = false, ?pr = false, ?s = false ) 
     {
-      var type = (pp.pkg == HaxeUmlGen.pkg) ? pp.type : pp.path;
-      strBuf.add(type);
-      if( pp != tParams.last())
-	strBuf.add(", ");
+        name = n;
+        path = p;
+        var pathSep = Reference.separatePath( path );
+        pkg = pathSep.pkg;
+        type = pathSep.type;
+        isFunc = f;
+        protection = ( pr ) ? "+" : "-";
+        isStatic = s;
+        params = ( isFunc ) ? new List<Reference>() : null;
+        tParams = new List<Reference>();
     }
-    strBuf.add("\\>");
-    return strBuf.toString();
-  }
 
-  /**
-	output the params as a dot string
-	@return dot expression for a function param
-   **/
-  public function getFuncParams() : String
-  {
-    if (!isFunc) return "";
+    /**
+     * add a param
+     * @param r new param
+     */
+    inline public function addParam( r ) 
+    {
+        params.add( r );
+    }
 
-    var strBuf = new StringBuf();
-    strBuf.add(" (");
-    for( pp in params )
-      if( pp != params.last() )
-	strBuf.add(pp.getParamStr() + ", ");
-      else
-	strBuf.add(pp.getParamStr());
-    strBuf.add(")");
+    /**
+     * add a type param
+     * @param r new type param
+     */
+    inline public function addTParam( r ) 
+    {
+        tParams.add( r );
+    }
 
-    return strBuf.toString();
-  }
+    /**
+     * output this type as a function parameter
+     * @return dot expression for a parameter
+     */
+    public function getParamStr() : String 
+    {
+        var type = ( pkg == HaxeUmlGen.pkg ) ? type : path;
+        return name + getFuncParams() + " : " + type + getTParamsStr();
+    }
 
-  /**
-	get a list of this type and its children that are in the specified package
-	@param p package name
-	@return list of types in the package
-   **/
-  public function inPkg(p:String) : List<Reference>
-  {
-    var ret = new List<Reference>();
+    /**
+     * output this type as a class field
+     * @return dot expression for a field
+     * @todo underline statics
+     */
+    public function getFieldStr() : String 
+    {
+        var type = ( pkg == HaxeUmlGen.pkg ) ? type : path;
+        return protection + " " + name + getFuncParams() + " : " + type + getTParamsStr() + "\\l";
+    }
 
-    // check type params
-    for( pp in tParams )
-      for( pp2 in pp.inPkg(p) )
-	ret.add(pp2);
+    /**
+     * get type params for field str
+     * @return dot expression for a type parameter
+     */
+    private function getTParamsStr() : String 
+    {
+        if( tParams.isEmpty() ) 
+            return "";        
+        var strBuf = new StringBuf();
+        strBuf.add( "\\<" );
+        for( pp in tParams ) 
+        {
+            var type = ( pp.pkg == HaxeUmlGen.pkg ) ? pp.type : pp.path;
+            strBuf.add( type );
+            if( pp != tParams.last() ) 
+                strBuf.add( ", " );            
+        }
+        strBuf.add( "\\>" );
+        return strBuf.toString();
+    }
 
-    // check params
-    if( isFunc )
-      for( pp in params )
-	for( pp2 in pp.inPkg(p) )
-	  ret.add(pp2);
+    /**
+     * output the params as a dot string
+     * @return dot expression for a function param
+     */
+    public function getFuncParams() : String 
+    {
+        if( !isFunc ) 
+            return "";        
+        var strBuf = new StringBuf();
+        strBuf.add( " (" );
+        for( pp in params )
+            if( pp != params.last() ) 
+                strBuf.add( pp.getParamStr() + ", " );
+            else
+                strBuf.add( pp.getParamStr() );
+        strBuf.add( ")" );
+        return strBuf.toString();
+    }
 
-    // check me
-    if( p == pkg )
-      ret.add(this);
+    /**
+     * get a list of this type and its children that are in the specified package
+     * @param p package name
+     * @return list of types in the package
+     */
+    public function inPkg( p : String ) : List<Reference> 
+    {
+        var ret = new List<Reference>();
 
-    return ret;
-  }
+        // check type params
+        for( pp in tParams )
+            for( pp2 in pp.inPkg( p ) )
+                ret.add( pp2 );
 
-  /**
-	separate path into package and type name
-	@param path the full path
-	@return package and type names
-   **/
-  public static function separatePath(path:String)
-  {
-    if( path==null )
-    return {pkg: null, type: null};
-    var sep = path.lastIndexOf(".");
-    var pkg  = (sep==-1) ? "" : path.substr(0, sep);
-    var type = (sep==-1) ? path : path.substr(sep+1, path.length-sep-1);
-    return {pkg: pkg, type: type};
-  }
+                // check params
+        if( isFunc ) 
+            for( pp in params )
+                for( pp2 in pp.inPkg( p ) )
+                    ret.add( pp2 );
+
+                    // check me
+        if( p == pkg ) 
+            ret.add( this );        
+        return ret;
+    }
+
+    /**
+     * separate path into package and type name
+     * @param path the full path
+     * @return package and type names
+     */
+    public static function separatePath( path : String ) 
+    {
+        if( path == null ) 
+            return 
+            { pkg : null, type : null };        
+        var sep = path.lastIndexOf( "." );
+        var pkg = ( sep == -1 ) ? "" : path.substr( 0, sep );
+        var type = ( sep == -1 ) ? path : path.substr( sep + 1, path.length - sep - 1 );
+        return 
+        { pkg : pkg, type : type };
+    }
+
 }

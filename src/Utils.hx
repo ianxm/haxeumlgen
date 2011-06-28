@@ -3,13 +3,13 @@
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
- *   - Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *   - Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *
+ * 
+ * - Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ * - Redistributions in binary form must reproduce the above copyright
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
+ * 
  * THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED. IN NO EVENT SHALL THE HAXE PROJECT CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
@@ -22,59 +22,56 @@
 
 import Type;
 
-class Utils
+class Utils 
 {
-  /**
-	find first item in an iterable. return null if it doesn't exist. 
-	sort of like it.filter(f).first() but doesn't have to go through the whole list.
-   **/
-  public static function findFirst<A>( it : Iterable<A>, f : A -> Bool ) : A
-  {
-    for( ii in it )
-      if( f(ii) )
-	return ii;
-    return null;
-  }
-
-  /**
-	returns a deep copy of anything
-  **/
-  public static function deepCopy<T>( v:T ) : T
-  {
-    var type = Type.typeof(v);
-    if( type==TInt || type==TFloat || type==TNull || type==TUnknown || type==TFunction ) // simple type
-      return v;
-
-    else if( Std.is(v, Array) ) // array
+    /**
+     * find first item in an iterable. return null if it doesn't exist.
+     * sort of like it.filter(f).first() but doesn't have to go through the whole list.
+     */
+    public static function findFirst<A>( it : Iterable<A>, f : A -> Bool ) : A 
     {
-      var r = Type.createInstance(Type.getClass(v), []);
-     untyped
-     {
-       for( ii in 0...v.length )
-	 r.push(deepCopy(v[ii]));
-     }
-     return r;
+        for( ii in it )
+            if( f( ii ) ) 
+                return ii;            
+        return null;
     }
-    else
+
+    /**
+     * returns a deep copy of anything
+     */
+    public static function deepCopy<T>( v : T ) : T 
     {
-      var obj;
-      switch( type )
-      {
-      case TClass(_): // class
-	obj = Type.createEmptyInstance(Type.getClass(v));
-
-      case TEnum(_): // enum
-	obj = Type.createEnum(Type.getEnum(v), Type.enumConstructor(v), Type.enumParameters(v));
-
-      default: // anonymous object
-	obj = cast {};
-      }
-      for( ff in Reflect.fields(v) )
-	Reflect.setField(obj, ff, deepCopy(Reflect.field(v, ff)));
-      return cast obj;
+        var type = Type.typeof( v );
+        if( type == TInt || type == TFloat || type == TNull || type == TUnknown || type == TFunction ) // simple type
+            return v;
+        else if( Std.is( v, Array ) ) // array
+        
+        {
+            var r = Type.createInstance( Type.getClass( v ), [] );
+            untyped  
+            {
+                for( ii in 0...v.length )
+                    r.push( deepCopy( v[ii] ) );
+            }
+            return r;
+        } else 
+        {
+            var obj;
+            switch( type ) 
+            {
+                case TClass( _ ): // class
+                obj = Type.createEmptyInstance( Type.getClass( v ) );
+                case TEnum( _ ): // enum
+                obj = Type.createEnum( Type.getEnum( v ), Type.enumConstructor( v ), Type.enumParameters( v ) );
+                default: // anonymous object
+                obj = cast  
+                {}
+            }
+            for( ff in Reflect.fields( v ) )
+                Reflect.setField( obj, ff, deepCopy( Reflect.field( v, ff ) ) );
+            return cast obj;
+        }
+        return null;
     }
-    return null;
-  }
-
 
 }

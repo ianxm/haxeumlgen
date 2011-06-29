@@ -27,14 +27,31 @@ package umlgen.model;
 class Package 
 {
 	/**
-	 * The full qualified name of the package
+	 * The full qualified name of the package on flat mode,
+	 * the subpackage name on hierarchical mode.
 	 */
     public var name(default, default) : String;
+    
+    
+    /**
+     * Gets the full qualified package name on hierarchical mode. 
+     */
+    public var fullName(getFullName, null) : String;
     
     /**
      * a list of all data types within this package
      */
     public var dataTypes(default, null) : List<ModelType>;
+    
+    /**
+     * a list of all subpackages (only available on hierarchical package mode)
+     */
+    public var subPackages(default, null) : Hash<Package>;
+    
+    /**
+     * the parent package
+     */
+    public var parentPackage(default, default) : Package;
     
     /**
      * Initializes a new instance of the Package class.
@@ -44,18 +61,42 @@ class Package
     {
     	name = pkg;
     	dataTypes = new List<ModelType>();
+    	subPackages = new Hash<Package>();
+    }
+    
+    /**
+     * Gets the full qualified name on hierarchical mode.
+     */
+    private function getFullName() : String
+    {
+    	var fullPkg = name;
+    	
+    	var current = parentPackage;
+    	while(current != null)
+    	{
+    		fullPkg = current.name + "." + fullPkg;
+    		current = current.parentPackage;
+    	}
+    	
+    	return fullPkg;
     }
     
     /**
      * Adds a datatype to the package.
      * @param type the type to add
-     * @throws string thrown if the package of the specified type does not match
-     * the name of this package.
      */
     public function addDataType(type:ModelType)
     {
-    	if(type.pkg != name) 
-    	   throw ("the package of the type does not match this package");
     	dataTypes.add(type);
+    }
+    
+    /**
+     * Adds a subpackage to this package
+     * @param pkg the package to add
+     */
+    public function addSubPackage(pkg:Package)
+    {
+    	subPackages.set(pkg.name, pkg);
+    	pkg.parentPackage = this;
     }
 }

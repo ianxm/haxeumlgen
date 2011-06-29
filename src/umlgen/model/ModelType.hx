@@ -47,5 +47,5 @@ interface ModelType
      * @return dot statements
      */
     public function getDotStr() : String;
-
+    
 }

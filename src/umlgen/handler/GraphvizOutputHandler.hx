@@ -182,6 +182,14 @@ class GraphvizOutputHandler implements IOutputHandler
     }
     
     /**
+     * Gets the mode how packages should get organized.
+     */
+    public function getPackageMode() : OutputPackageMode
+    {
+    	return OutputPackageMode.Flat;
+    }
+    
+    /**
      * write html file to output directory for chxdoc integration
      * @param outDir output directory where uml images are.
      * @param packageName name of current package

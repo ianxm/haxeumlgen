@@ -47,17 +47,17 @@ class ClassModel implements ModelType
     /**
      * if true, this is an interface
      */
-    private var isInterface : Bool;
+    public var isInterface(default, null) : Bool;
 
     /**
      * this contains fields and methods
      */
-    private var fields : List<Reference>;
+    public var fields(default, null) : List<Reference>;
 
     /**
      * this is a list of super classes
      */
-    private var parents : List<Reference>;
+    public var parents(default, null) : List<Reference>;
 
     /**
      * constructor

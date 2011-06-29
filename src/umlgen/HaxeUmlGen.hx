@@ -28,6 +28,7 @@ import umlgen.model.Package;
 import umlgen.handler.IOutputHandler;
 import umlgen.handler.GraphvizOutputHandler;
 import umlgen.handler.XmiOutputHandler;
+import umlgen.handler.OutputPackageMode;
 
 /**
  * The haxe uml generator dynamically creates class diagrams for haxe projects.
@@ -41,7 +42,7 @@ class HaxeUmlGen
     /**
      * input filename (xml file from haxe compiler)
      */
-    private var inFname : String;
+    public var inFname(default,default) : String;
 
     /**
      * output directory. if not set, same as input file
@@ -285,15 +286,61 @@ class HaxeUmlGen
     {
         // prepare of packages
         var packages:Hash<Package> = new Hash<Package>();
-        for( dd in dataTypes )
+        if(handler.getPackageMode() == OutputPackageMode.Flat)
         {
-        	if(!packages.exists(dd.pkg))
-        	{
-        		packages.set(dd.pkg, new Package(dd.pkg));
-        	}
-        	
-        	var pkg:Package = packages.get(dd.pkg);
-        	pkg.addDataType(dd);
+            for( dd in dataTypes )
+            {
+            	if(!packages.exists(dd.pkg))
+            	{
+            		packages.set(dd.pkg, new Package(dd.pkg));
+            	}
+            	
+            	var pkg:Package = packages.get(dd.pkg);
+            	pkg.addDataType(dd);
+            }
+        }
+        else
+        {
+        	for( dd in dataTypes )
+            {
+            	var pkg = dd.pkg == null ? "" : dd.pkg;
+            	var parts = pkg.split(".");
+            	
+            	// a root package type?
+            	if(parts.length == 0) 
+            	{
+            		if(!packages.exists(""))
+            		{
+            			packages.set("", new Package(""));
+            		}
+            		packages.get("").addDataType(dd);
+            	}
+            	else
+            	{
+            		var i = 0;
+                    var curPkg:Package = null;
+                    var pkgList:Hash<Package> = packages;
+                    
+                    // traverse hierarchy down
+                    for(i in 0 ... parts.length)
+                    {
+                    	// create current node if not available
+                    	if(!pkgList.exists(parts[i]))
+                        {
+                        	if(curPkg == null)
+                                pkgList.set(parts[i], new Package(parts[i]));
+                            else
+                                curPkg.addSubPackage(new Package(parts[i]));
+                        }
+                        
+                        // use this subnode as navigation point 
+                        curPkg = pkgList.get(parts[i]);
+                        pkgList = curPkg.subPackages;
+                    }
+                    // add datatype to bottom package
+                    curPkg.addDataType(dd);
+            	}
+            }
         }
         
         // call the handler

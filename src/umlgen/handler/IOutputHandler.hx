@@ -54,6 +54,11 @@ interface IOutputHandler
      */
     public function processArg(arg:String, args:Iterator<String>, generator:HaxeUmlGen) : Bool;
     
+    /**
+     * Gets the mode how packages should get organized.
+     */
+    public function getPackageMode() : OutputPackageMode;
+
     ///**
     // * Prints the help for this handler.
     // */

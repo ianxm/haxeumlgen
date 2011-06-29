@@ -49,12 +49,12 @@ class Reference
     /**
      * true if variable is static
      */
-    private var isStatic : Bool;
+    public var isStatic( default, null ) : Bool;
 
     /**
      * public or private, stored as symbol
      */
-    private var protection : String;
+    public var protection( default, null ) : String;
 
     /**
      * return true if this references a function
@@ -64,12 +64,12 @@ class Reference
     /**
      * type parameter
      */
-    private var tParams : List<Reference>;
+    public var tParams( default, null ) : List<Reference>;
 
     /**
      * list of params if this is a function
      */
-    private var params : List<Reference>;
+    public var params( default, null ) : List<Reference>;
 
     /**
      * constructor
@@ -169,6 +169,9 @@ class Reference
             else
                 strBuf.add( pp.getParamStr() );
         strBuf.add( ")" );
+        
+        // TODO: return type
+        
         return strBuf.toString();
     }
 

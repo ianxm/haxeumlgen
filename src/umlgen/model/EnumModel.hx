@@ -41,7 +41,11 @@ class EnumModel implements ModelType
      * class name
      */
     public var type( default, null ) : String;
-    private var fields : List<String>;
+    
+    /**
+     * a list of all enum values
+     */
+    public var fields(default, null) : List<String>;
 
     /**
      * constructor
@@ -55,7 +59,7 @@ class EnumModel implements ModelType
         type = pathSep.type;
         fields = new List<String>();
     }
-
+  
     /**
      * add a field to the enum
      * @param f the new field

@@ -147,7 +147,7 @@ class XmiOutputHandler implements IOutputHandler
     	}
     	else
     	{
-            var id = "package:" + toId(pp.name);
+            var id = "package:" + toId(pp.fullName);
             buf.add('<UML:Package xmi.id="' + id + '" name="'+pp.name+'" isRoot="false" isLeaf="false" isAbstract="false">');
             buf.add('<UML:ModelElement.visibility xmi.value="public" />');
             buf.add('<UML:ModelElement.namespace>');
@@ -201,7 +201,7 @@ class XmiOutputHandler implements IOutputHandler
     }
     
     /**
-     * writes a class as an xpi string
+     * writes a class as an xmi string
      */
     private function writeClass(buf:StringBuf, clz:ClassModel, pkgId:String) 
     {
@@ -222,12 +222,11 @@ class XmiOutputHandler implements IOutputHandler
                writeAssociation(buf, ref, clz);
         }
           
-        
-        // TODO: Write generalization and realization	
+        writeBaseTypes(buf, clz, pkgId);
     }
     
     /**
-     * writes an interface as an xpi string
+     * writes an interface as an xmi string
      */
     private function writeInterface(buf:StringBuf, clz:ClassModel, pkgId:String) 
     {
@@ -248,11 +247,60 @@ class XmiOutputHandler implements IOutputHandler
         
         buf.add('</UML:Interface>');    	
         
-        // TODO: Write generalization and realization
+        writeBaseTypes(buf, clz, pkgId);
     }
     
     /**
-     * writes the class fields as an xpi string
+     * write base types (generalization realization)
+     */
+    private function writeBaseTypes(buf:StringBuf, clz:ClassModel, pkgId:String) 
+    {
+    	for(parent in clz.parents)
+    	{
+    		if(parent.name == "implements")
+    		{
+    			writeDependency(buf, parent, clz);
+    		}
+    		else if(parent.name == "extends")
+    	    {
+    	    	writeGeneralization(buf, parent, clz);	
+    	    }
+    	}
+    }
+    
+    /**
+     * writes an interface implementation as xmi 
+     */
+    private function writeDependency(buf:StringBuf, parent:Reference, clz:ClassModel)
+    {
+    	var subClass = "class:" + toId(clz.path);
+        var baseClass = "class:" + toId(parent.path);
+        var id = "dependency:" + toId(clz.path) + toId(parent.path);
+        
+        // TODO: all uml tools handle interface implementations different. need to find a common technique
+        buf.add('<UML:Dependency client="'+subClass+'" supplier="'+baseClass+'" xmi.id="'+id+'" visibility="public">');
+        buf.add('<UML:ModelElement.stereotype>');
+        buf.add('<UML:Stereotype name="realize" isRoot="false" isLeaf="false" isAbstract="false">');
+        buf.add('</UML:Stereotype>');
+        buf.add('</UML:ModelElement.stereotype>');
+        buf.add('</UML:Dependency>');
+    }
+    
+    /**
+     * writes an baseclass extension as xmi 
+     */
+    private function writeGeneralization(buf:StringBuf, parent:Reference, clz:ClassModel)
+    {
+    	var subClass = "class:" + toId(clz.path);
+    	var baseClass = "class:" + toId(parent.path);
+    	var id = "generalization:" + toId(clz.path);
+    	
+    	buf.add('<UML:Generalization subtype="'+subClass+'" supertype="'+baseClass+'" xmi.id="'+id+'" visibility="public">');
+        buf.add('</UML:Generalization>');
+    }
+    
+    /**
+     * writes the class fields as an xmi string
      */
     private function writeFields(buf:StringBuf, clz:ClassModel)
     {
@@ -267,7 +315,7 @@ class XmiOutputHandler implements IOutputHandler
     }
     
     /**
-     * writes the specified reference as a method xpi string
+     * writes the specified reference as a method xmi string
      */
     private function writeMethod(buf:StringBuf, ref:Reference, clz:ClassModel)
     {
@@ -328,7 +376,7 @@ class XmiOutputHandler implements IOutputHandler
     }
     
     /**
-     * writes the specified reference as an attribute xpi string. 
+     * writes the specified reference as an attribute xmi string. 
      */
     private function writeAttribute(buf:StringBuf, ref:Reference, clz:ClassModel)
     {

@@ -411,9 +411,9 @@ class XmiOutputHandler implements IOutputHandler
     {
         buf.add('<UML:Class xmi.id="class:'+toId(enm.path)+'" name="'+enm.type+'" isSpecification="false" isRoot="false" isLeaf="false" isAbstract="false" isActive="false" namespace="' + pkgId + '">');
         buf.add('<UML:ModelElement.visibility xmi.value="public" />');
-        // mark as <<enum>>
+        // mark as <<enumeration>>
         buf.add('<UML:ModelElement.stereoType>');
-            buf.add('<UML:Stereotype name="enum" isRoot="false" isLeaf="false" isAbstract="false">');
+            buf.add('<UML:Stereotype name="enumeration" isRoot="false" isLeaf="false" isAbstract="false">');
                 buf.add('<UML:Stereotype.baseClass>Class</UML:Stereotype.baseClass>');
             buf.add('</UML:Stereotype>');
         buf.add('</UML:ModelElement.stereoType>');
@@ -424,11 +424,11 @@ class XmiOutputHandler implements IOutputHandler
             buf.add('<UML:Attribute name="'+val+'" ownerScope="classifier" targetScope="instance" changeability="frozen" aggregation="composite" namespace="class:'+toId(enm.path)+'">');
             buf.add('<UML:ModelElement.visibility xmi.value="public" />');
             // mark as <<enum constant>>
-            buf.add('<UML:ModelElement.stereotype>');
+            /*buf.add('<UML:ModelElement.stereotype>');
                 buf.add('<UML:Stereotype name="enum+constant" isRoot="false" isLeaf="false" isAbstract="false">');
                     buf.add('<UML:Stereotype.baseClass>Attribute</UML:Stereotype.baseClass>');
                 buf.add('</UML:Stereotype>');
-            buf.add('</UML:ModelElement.stereotype>');
+            buf.add('</UML:ModelElement.stereotype>');*/
             
             buf.add('</UML:Attribute>');
         }

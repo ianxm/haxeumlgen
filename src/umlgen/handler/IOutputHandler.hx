@@ -21,6 +21,7 @@
  */
 package umlgen.handler;
 
+import umlgen.HaxeUmlGen;
 import umlgen.model.Package;
 
 /**

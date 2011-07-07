@@ -23,6 +23,7 @@
 package umlgen.model;
 
 import umlgen.HaxeUmlGen;
+import umlgen.Utils;
 
 /**
  * a class

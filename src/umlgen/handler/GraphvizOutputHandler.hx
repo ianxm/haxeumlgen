@@ -22,6 +22,7 @@
  package umlgen.handler;
 
 using StringTools;
+import umlgen.HaxeUmlGen;
 import umlgen.model.Package;
 
 /**

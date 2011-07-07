@@ -24,6 +24,7 @@ package umlgen.handler;
 using StringTools;
 import neko.io.Path;
 
+import umlgen.HaxeUmlGen;
 import umlgen.model.Package;
 import umlgen.model.Reference;
 import umlgen.model.ClassModel;
@@ -107,7 +108,7 @@ class XmiOutputHandler implements IOutputHandler
         buf.add('</XMI.content>');
         buf.add('</XMI>');
         
-        var xmiFname:String = Path.withoutExtension(generator.outDir + "/" + generator.inFname) + ".xml";
+        var xmiFname:String = Path.withoutExtension(generator.outDir + "/" + Path.withoutDirectory(generator.inFname)) + "-xmi.xml";
         var fout = neko.io.File.write( xmiFname, false );
         fout.writeString(buf.toString());
         fout.close();
@@ -525,7 +526,7 @@ class XmiOutputHandler implements IOutputHandler
      */
     public static function getDescription() : String
     {
-    	return "writes a XMI project file";
+    	return "writes an XMI project file";
     }
     
     /**

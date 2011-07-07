@@ -1,6 +1,6 @@
 <project name="HaxeUmlGen" url="http://github.com/ianxm/haxeumlgen" license="BSD">
 	<user name="ianxm"/>
 	<description>This tool dynamically generates uml for a haXe project</description>
-	<version name="0.0.6">Added quiet option</version>
+	<version name="0.0.7">Added XMI generation, contributed by Daniel Kuschny</version>
 </project>
 

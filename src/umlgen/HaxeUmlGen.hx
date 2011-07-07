@@ -249,10 +249,10 @@ class HaxeUmlGen
             }
             
             neko.Lib.println( "  Global Options:" );
-            neko.Lib.println( "    -o --outdir=DIR Change the output directory.  Same as input by default" );
-            neko.Lib.println( "    -q --quiet      Don't output to console" );
-            neko.Lib.println( "    -v --version    Show version and exit" );
-            neko.Lib.println( "    -h --help       Show this message and exit" );
+            neko.Lib.println( "    -o --outdir=DIR  Change the output directory.  Defaults to the input directory." );
+            neko.Lib.println( "    -q --quiet       Don't output to console" );
+            neko.Lib.println( "    -v --version     Show version and exit" );
+            neko.Lib.println( "    -h --help        Show this message and exit" );
             
             // let the handlers print their help string for additional arguments
             for(key in AVAILABLE_HANDLERS.keys())

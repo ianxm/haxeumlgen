@@ -72,7 +72,7 @@ class GraphvizOutputHandler implements IOutputHandler
                 bgColor = "#" + bgColor;
     		return true;
     	}
-    	else if(arg.indexOf("--bgcolor=") != 1)
+    	else if(arg.indexOf("--bgcolor=") != -1)
     	{
             bgColor = arg.substr(10);
             if( !bgColor.startsWith("#"))
@@ -86,7 +86,7 @@ class GraphvizOutputHandler implements IOutputHandler
                 fgColor = "#" + fgColor;
     		return true;
     	}
-    	else if(arg.indexOf("--fgcolor=") != 1)
+    	else if(arg.indexOf("--fgcolor=") != -1)
     	{
             fgColor = arg.substr(10);
             if( !fgColor.startsWith("#"))

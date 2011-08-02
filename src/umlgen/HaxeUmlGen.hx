@@ -73,7 +73,7 @@ class HaxeUmlGen
     /**
      * current app version
      */
-    private static var VERSION = "0.1.0";
+    private static var VERSION = "0.1.1";
     
     private static var AVAILABLE_HANDLERS = {
     	var h:Hash<Class<IOutputHandler>> = new Hash<Class<IOutputHandler>>();
@@ -184,13 +184,8 @@ class HaxeUmlGen
                 outDir = aa.substr( 9 );
             else if( aa == "-q" || aa == "--quiet" ) 
                 quiet = true;
-            else if( inFname == null && aa == args[args.length - 1] || aa == args[args.length - 2] ) 
-                inFname = aa;
             else if( aa == args[args.length - 1] ) 
-                if( neko.FileSystem.exists( aa ) && neko.FileSystem.isDirectory( aa ) ) 
-                    neko.Sys.setCwd( aa );
-                else
-                    throw "Unknown option: " + aa;
+                inFname = aa;
             else if(handler.processArg(aa, iter, this))
             {}
             else

@@ -73,7 +73,7 @@ class HaxeUmlGen
     /**
      * current app version
      */
-    private static var VERSION = "0.1.1";
+    private static var VERSION = "0.1.2";
     
     private static var AVAILABLE_HANDLERS = {
     	var h:Hash<Class<IOutputHandler>> = new Hash<Class<IOutputHandler>>();
@@ -152,12 +152,8 @@ class HaxeUmlGen
     private function parseArgs() 
     {
         var args = neko.Sys.args();
-        if( args.length < 2 ) 
-        {
-        	printInfo();
-            checkHelpVer( args[0] );
-            neko.Sys.exit(1);
-        }
+	var isError = args.length<2;
+	checkHelpVer( args[0], isError );
         
         var iter = args.iterator();
          
@@ -184,8 +180,13 @@ class HaxeUmlGen
                 outDir = aa.substr( 9 );
             else if( aa == "-q" || aa == "--quiet" ) 
                 quiet = true;
-            else if( aa == args[args.length - 1] ) 
+            else if( inFname == null && aa == args[args.length - 1] || aa == args[args.length - 2] ) 
                 inFname = aa;
+            else if( aa == args[args.length - 1] ) 
+                if( neko.FileSystem.exists( aa ) && neko.FileSystem.isDirectory( aa ) ) 
+                    neko.Sys.setCwd( aa );
+                else
+                    throw "Unknown option: " + aa;
             else if(handler.processArg(aa, iter, this))
             {}
             else
@@ -230,6 +231,7 @@ class HaxeUmlGen
     {
         if( aa == "-h" || aa == "--help" ) 
         {
+	    printInfo();
             neko.Lib.println( "Usage: haxeumlgen MODE [OPTIONS] [FILE]" );
             neko.Lib.println( "Generate UML diagrams for haXe projects" );
             neko.Lib.println( "  Modes:" );
@@ -257,12 +259,18 @@ class HaxeUmlGen
                 Reflect.callMethod(cl, printHelp, []);
             }
             neko.Sys.exit( 0 );
-        } else if( aa == "-v" || aa == "--version" ) 
+        }
+	else if( aa == "-v" || aa == "--version" ) 
+	{
+	    printInfo();
             neko.Sys.exit( 0 );  
+	}
         else if(printError)
         {
-            log("too few arguments");
-            log("try `HaxeUmlGen --help` for more information");      
+	    printInfo();
+            log("Too few arguments");
+            log("Try `HaxeUmlGen --help` for more information");      
+            neko.Sys.exit(1);
         }
     }
 

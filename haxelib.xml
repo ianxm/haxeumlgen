@@ -1,6 +1,6 @@
 <project name="HaxeUmlGen" url="http://github.com/ianxm/haxeumlgen" license="BSD">
 	<user name="ianxm"/>
 	<description>This tool dynamically generates uml for a haXe project</description>
-	<version name="0.1.2">fixed command args for run from haxelib</version>
+	<version name="0.1.3">fixed run from haxelib on windows</version>
 </project>
 

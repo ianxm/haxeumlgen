@@ -73,7 +73,7 @@ class HaxeUmlGen
     /**
      * current app version
      */
-    private static var VERSION = "0.1.2";
+    private static var VERSION = "0.1.3";
     
     private static var AVAILABLE_HANDLERS = {
     	var h:Hash<Class<IOutputHandler>> = new Hash<Class<IOutputHandler>>();
@@ -183,10 +183,13 @@ class HaxeUmlGen
             else if( inFname == null && aa == args[args.length - 1] || aa == args[args.length - 2] ) 
                 inFname = aa;
             else if( aa == args[args.length - 1] ) 
-                if( neko.FileSystem.exists( aa ) && neko.FileSystem.isDirectory( aa ) ) 
-                    neko.Sys.setCwd( aa );
+	    {
+	        var dirName = neko.io.Path.directory(aa);
+                if( neko.FileSystem.exists( dirName ) && neko.FileSystem.isDirectory( dirName ) ) 
+                    neko.Sys.setCwd( dirName );
                 else
                     throw "Unknown option: " + aa;
+	    }
             else if(handler.processArg(aa, iter, this))
             {}
             else

@@ -240,7 +240,7 @@ class HaxeUmlGen
             neko.Lib.println( "  Modes:" );
             
             // print descriptions of all handlers
-            for(key in AVAILABLE_HANDLERS.keys())
+            for( key in AVAILABLE_HANDLERS.keys() )
             {
             	var cl:Class<IOutputHandler> = AVAILABLE_HANDLERS.get(key);
             	var getDescription:Dynamic = Reflect.field(cl, "getDescription");
@@ -255,7 +255,7 @@ class HaxeUmlGen
             neko.Lib.println( "    -h --help        Show this message and exit" );
             
             // let the handlers print their help string for additional arguments
-            for(key in AVAILABLE_HANDLERS.keys())
+            for( key in AVAILABLE_HANDLERS.keys() )
             {
                 var cl:Class<IOutputHandler> = AVAILABLE_HANDLERS.get(key);
                 var printHelp:Dynamic = Reflect.field(cl, "printHelp");
@@ -268,7 +268,7 @@ class HaxeUmlGen
             printInfo();
             neko.Sys.exit( 0 );  
         }
-        else if(printError)
+        else if( printError )
         {
             printInfo();
             log("Too few arguments");
@@ -286,20 +286,18 @@ class HaxeUmlGen
     }
 
     /**
-     * Prepares the read xml data and calles the current handler. 
+     * Prepares the read xml data and calls the current handler. 
      */
     private function callHandler() 
     {
         // prepare of packages
         var packages:Hash<Package> = new Hash<Package>();
-        if(handler.getPackageMode() == OutputPackageMode.Flat)
+        if( handler.getPackageMode() == OutputPackageMode.Flat )
         {
             for( dd in dataTypes )
             {
-            	if(!packages.exists(dd.pkg))
-            	{
+            	if( !packages.exists(dd.pkg) )
             		packages.set(dd.pkg, new Package(dd.pkg));
-            	}
             	
             	var pkg:Package = packages.get(dd.pkg);
             	pkg.addDataType(dd);
@@ -313,12 +311,10 @@ class HaxeUmlGen
             	var parts = pkg.split(".");
             	
             	// a root package type?
-            	if(parts.length == 0) 
+            	if( parts.length == 0 )
             	{
-            		if(!packages.exists(""))
-            		{
+            		if( !packages.exists("") )
             			packages.set("", new Package(""));
-            		}
             		packages.get("").addDataType(dd);
             	}
             	else
@@ -328,12 +324,12 @@ class HaxeUmlGen
                     var pkgList:Hash<Package> = packages;
                     
                     // traverse hierarchy down
-                    for(i in 0 ... parts.length)
+                    for( i in 0 ... parts.length )
                     {
                     	// create current node if not available
-                    	if(!pkgList.exists(parts[i]))
+                    	if( !pkgList.exists(parts[i]) )
                         {
-                        	if(curPkg == null)
+                        	if( curPkg == null )
                                 pkgList.set(parts[i], new Package(parts[i]));
                             else
                                 curPkg.addSubPackage(new Package(parts[i]));

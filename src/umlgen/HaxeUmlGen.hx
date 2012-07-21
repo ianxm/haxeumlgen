@@ -73,7 +73,7 @@ class HaxeUmlGen
     /**
      * current app version
      */
-    private static var VERSION = "0.1.4";
+    private static var VERSION = "0.1.5";
     
     private static var AVAILABLE_HANDLERS = {
     	var h:Hash<Class<IOutputHandler>> = new Hash<Class<IOutputHandler>>();
@@ -142,7 +142,7 @@ class HaxeUmlGen
     private function printInfo() : Void
     {
         // some info
-        log( "HaxeUmlGen v" + VERSION + " - (c) 2011 Ian Martins, Daniel Kuschny" );    
+        log( "HaxeUmlGen v" + VERSION + " - (c) 2011-2012 Ian Martins, Daniel Kuschny" );    
     }
 
     /**

@@ -25,6 +25,13 @@ using StringTools;
 import umlgen.HaxeUmlGen;
 import umlgen.model.Package;
 
+enum ImgFormat
+{
+    PNG;
+    SVG;
+    JPG;
+}
+
 /**
  * A handler for generating a graph using Graphviz (dot)
  */
@@ -41,6 +48,11 @@ class GraphvizOutputHandler implements IOutputHandler
     private var fgColor : String;
 
     /**
+     * format in which image should be written
+     */
+    private var imgFormat : ImgFormat;
+
+    /**
      * if true, write chxdoc html files to output directory
      */
     private var forChxdoc : Bool;
@@ -53,6 +65,7 @@ class GraphvizOutputHandler implements IOutputHandler
     {
     	bgColor = "white";
         fgColor = "black";
+        imgFormat = PNG;
         forChxdoc = false;
     }
 
@@ -62,43 +75,63 @@ class GraphvizOutputHandler implements IOutputHandler
      * @param args the iterator containing the arguments (for accessing next args)
      * @param generator the generator containing the settings
      * @return true if the handler could process the arg, otherwise false
+     * @throws string if bad image format string
      */
     public function processArg(arg:String, args:Iterator<String>, generator:HaxeUmlGen) : Bool
     {
-    	if(arg == "-b")
+    	if( arg == "-b" )
     	{
     		bgColor = args.next();
     		if( !bgColor.startsWith("#"))
                 bgColor = "#" + bgColor;
     		return true;
     	}
-    	else if(arg.indexOf("--bgcolor=") != -1)
+    	else if( arg.indexOf("--bgcolor=") != -1 )
     	{
             bgColor = arg.substr(10);
             if( !bgColor.startsWith("#"))
                 bgColor = "#" + bgColor;
     		return true;
     	}
-    	else if(arg == "-f")
+    	else if( arg == "-f" )
     	{
     		fgColor = args.next();
     		 if( !fgColor.startsWith("#"))
                 fgColor = "#" + fgColor;
     		return true;
     	}
-    	else if(arg.indexOf("--fgcolor=") != -1)
+    	else if( arg.indexOf("--fgcolor=") != -1 )
     	{
             fgColor = arg.substr(10);
             if( !fgColor.startsWith("#"))
                 fgColor = "#" + fgColor;
     		return true;
     	}
+        else if( arg == "-i" )
+        {
+            var formatStr = args.next().toUpperCase();
+            try {
+                imgFormat = Type.createEnum(ImgFormat, formatStr);
+            } catch ( ex:Dynamic ) {
+                throw "invalid image format: " + formatStr;
+            }
+            return true;
+        }
+        else if( arg.indexOf("--img=") != -1 )
+        {
+            var formatStr = arg.substr(6).toUpperCase();
+            try {
+                imgFormat = Type.createEnum(ImgFormat, formatStr);
+            } catch ( ex:Dynamic ) {
+                throw "invalid image format: " + formatStr;
+            }
+            return true;
+        }
     	else if( arg == "-c" || arg == "--chxdoc" )
         {
-        	 forChxdoc = true;
-             return true;
+            forChxdoc = true;
+            return true;
         }
-
 
     	return false;
     }
@@ -149,8 +182,9 @@ class GraphvizOutputHandler implements IOutputHandler
             // call dot, pass string buffer to stdin
             if( pp.name == "" )
                 pp.name = "Root";
-            var pngFname = generator.outDir + "/" + pp.name + ".png";
-            var proc = new neko.io.Process( 'dot', [ '-Tpng', '-o', pngFname ] );
+            var outExt = Std.string(imgFormat).toLowerCase();
+            var outFname = generator.outDir + "/" + pp.name + "." + outExt;
+            var proc = new neko.io.Process( 'dot', [ '-T'+outExt, '-o', outFname ] );
             proc.stdin.writeString( buf.toString() );
             proc.stdin.close();
 
@@ -173,6 +207,7 @@ class GraphvizOutputHandler implements IOutputHandler
         neko.Lib.println("  Graphviz Options:");
         neko.Lib.println("    -b --bgcolor=COLOR  Set background color");
         neko.Lib.println("    -f --fgcolor=COLOR  Set foreground color");
+        neko.Lib.println("    -i --img=FORMAT     Set image format (PNG, JPG, SVG)");
         neko.Lib.println("    -c --chxdoc         Write html files to output directory for chxdoc");
     }
     /**

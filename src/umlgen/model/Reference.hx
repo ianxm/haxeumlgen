@@ -29,7 +29,7 @@ class Reference
     /**
      * package and type, for functions this is the return type
      */
-    public var path( default, default ) : String;
+    public var path( default, setPath ) : String;
 
     /**
      * package
@@ -83,14 +83,20 @@ class Reference
     {
         name = n;
         path = p;
-        var pathSep = Reference.separatePath( path );
-        pkg = pathSep.pkg;
-        type = pathSep.type;
         isFunc = f;
         protection = ( pr ) ? "+" : "-";
         isStatic = s;
         params = ( isFunc ) ? new List<Reference>() : null;
         tParams = new List<Reference>();
+    }
+
+    private function setPath( path )
+    {
+        this.path = path;
+        var pathSep = Reference.separatePath( path );
+        pkg = pathSep.pkg;
+        type = pathSep.type;
+        return path;
     }
 
     /**

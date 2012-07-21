@@ -73,7 +73,7 @@ class HaxeUmlGen
     /**
      * current app version
      */
-    private static var VERSION = "0.1.3";
+    private static var VERSION = "0.1.4";
     
     private static var AVAILABLE_HANDLERS = {
     	var h:Hash<Class<IOutputHandler>> = new Hash<Class<IOutputHandler>>();

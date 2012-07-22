@@ -163,7 +163,15 @@ class InputHandler
                 break;            
             ref.addParam( buildReference( params.next(), pname, false, false ) );
         }
-        ref.path = params.next().get( "path" ); // set return type
+        var ret = params.next();                            // set return type
+        switch( ret.nodeName )
+        {
+        case "e","t","c": ref.path = ret.get( "path" );
+        case "d": ref.path = "Dynamic";
+        case "a": ref.path = "Anonymous";
+        case "unknown": ref.path = "Unknown";
+        case "f": ref.path = "function";
+        }
         return ref;
     }
 

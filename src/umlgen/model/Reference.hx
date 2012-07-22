@@ -176,8 +176,6 @@ class Reference
                 strBuf.add( pp.getParamStr() );
         strBuf.add( ")" );
         
-        // TODO: return type
-        
         return strBuf.toString();
     }
 
@@ -195,13 +193,13 @@ class Reference
             for( pp2 in pp.inPkg( p ) )
                 ret.add( pp2 );
 
-                // check params
+        // check params
         if( isFunc ) 
             for( pp in params )
                 for( pp2 in pp.inPkg( p ) )
                     ret.add( pp2 );
 
-                    // check me
+        // check me
         if( p == pkg ) 
             ret.add( this );        
         return ret;
@@ -220,8 +218,6 @@ class Reference
         var sep = path.lastIndexOf( "." );
         var pkg = ( sep == -1 ) ? "" : path.substr( 0, sep );
         var type = ( sep == -1 ) ? path : path.substr( sep + 1, path.length - sep - 1 );
-        return 
-        { pkg : pkg, type : type };
+        return { pkg : pkg, type : type };
     }
-
 }

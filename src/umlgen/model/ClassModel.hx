@@ -22,6 +22,7 @@
 
 package umlgen.model;
 
+using Lambda;
 import umlgen.HaxeUmlGen;
 import umlgen.Utils;
 
@@ -127,10 +128,9 @@ class ClassModel implements ModelType
     {
         var strBuf = new StringBuf();
         var isInherited = this.isInherited;
-        for( ff in fields.filter( function ( ii ) 
-        {
-            return !ii.isFunc && !isInherited( ii );
-        } ) )
+        var sortedFields = fields.filter( function(ii) return !ii.isFunc && !isInherited(ii) ).array();
+        sortedFields.reverse();
+        for( ff in sortedFields )
             strBuf.add( ff.getFieldStr() );
         return strBuf.toString();
     }
@@ -143,10 +143,9 @@ class ClassModel implements ModelType
     {
         var strBuf = new StringBuf();
         var isInherited = this.isInherited;
-        for( mm in fields.filter( function ( ii ) 
-        {
-            return ii.isFunc && !isInherited( ii );
-        } ) )
+        var sortedFields = fields.filter( function(ii) return ii.isFunc && !isInherited(ii) ).array();
+        sortedFields.reverse();
+        for( mm in sortedFields )
             strBuf.add( mm.getFieldStr() );
         return strBuf.toString();
     }
@@ -158,10 +157,7 @@ class ClassModel implements ModelType
     {
         for( pp in parents ) 
         {
-            var pobj = Utils.findFirst( HaxeUmlGen.dataTypes, function ( dd ) 
-            {
-                return dd.path == pp.path;
-            } );
+            var pobj = Utils.findFirst( HaxeUmlGen.dataTypes, function(dd) return dd.path==pp.path );
             if( pobj == null ) 
                 throw "parent not found";            
             if( !Std.is( pobj, ClassModel ) ) 
@@ -178,10 +174,7 @@ class ClassModel implements ModelType
      */
     public function hasRef( ref : Reference ) 
     {
-        return Lambda.exists( fields, function ( ff ) 
-        {
-            return ff.name == ref.name;
-        } );
+        return fields.exists( function(ff) return ff.name == ref.name );
     }
 
     /**
@@ -195,10 +188,7 @@ class ClassModel implements ModelType
         {
             // add fields and field type params, only add each reference once
             for( aa in rr.inPkg( HaxeUmlGen.pkg ) )
-                if( !Lambda.exists( assoc, function ( tt ) 
-                {
-                    return aa.path == tt.path;
-                } ) ) 
+                if( !assoc.exists( function(tt) return aa.path==tt.path ) )
                     assoc.add( aa );                
         }
         return assoc;

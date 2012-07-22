@@ -45,7 +45,7 @@ class TestClass extends haxe.unit.TestCase
         var testClass = new ClassModel( "the.pkg.AClass", false );
         testClass.addField( new Reference( "aField1", "Int", false, false, false ) );
         testClass.addField( new Reference( "aField2", "String", false, true, false ) );
-        var check = '\t "the.pkg.AClass" [ label = "{AClass|- aField1 : Int\\l+ aField2 : String\\l|}" ]\n';
+        var check = '\t "the.pkg.AClass" [ label = "{AClass|+ aField2 : String\\l- aField1 : Int\\l|}" ]\n';
         assertEquals( check, testClass.getDotStr() );
     }
 
@@ -72,7 +72,7 @@ class TestClass extends haxe.unit.TestCase
         var testClass = new ClassModel( "the.pkg.AClass", false );
         testClass.addField( new Reference( "aMethod1", "Void", true, false, false ) );
         testClass.addField( new Reference( "aMethod2", "String", true, true, false ) );
-        var check = '\t "the.pkg.AClass" [ label = "{AClass||- aMethod1 () : Void\\l+ aMethod2 () : String\\l}" ]\n';
+        var check = '\t "the.pkg.AClass" [ label = "{AClass||+ aMethod2 () : String\\l- aMethod1 () : Void\\l}" ]\n';
         assertEquals( check, testClass.getDotStr() );
     }
 

@@ -189,7 +189,7 @@ class ClassModel implements ModelType
             // add fields and field type params, only add each reference once
             for( aa in rr.inPkg( HaxeUmlGen.pkg ) )
                 if( !assoc.exists( function(tt) return aa.path==tt.path ) )
-                    assoc.add( aa );                
+                    assoc.add( aa );
         }
         return assoc;
     }

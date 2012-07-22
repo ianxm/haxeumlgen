@@ -67,13 +67,13 @@ class HaxeUmlGen
     /** 
      * target package for diagram
      */  
-    public static var pkg(default,null) : String;
+    public static var pkg : String;
     
 
     /**
      * current app version
      */
-    private static var VERSION = "0.1.5";
+    private static var VERSION = "0.1.6";
     
     private static var AVAILABLE_HANDLERS = {
     	var h:Hash<Class<IOutputHandler>> = new Hash<Class<IOutputHandler>>();

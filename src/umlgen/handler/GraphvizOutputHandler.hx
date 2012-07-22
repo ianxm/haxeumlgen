@@ -160,6 +160,7 @@ class GraphvizOutputHandler implements IOutputHandler
     {
     	for( pp in packages )
         {
+            HaxeUmlGen.pkg = pp.name;
             var boxes = pp.dataTypes;
             if( boxes.isEmpty() )
                 throw "No classes found in the desired package";

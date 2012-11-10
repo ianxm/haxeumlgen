@@ -111,7 +111,10 @@ class InputHandler
             {
                 var isPublic = ee.exists( "public" ) && ee.get( "public" ) == "1";
                 var isStatic = ee.exists( "static" ) && ee.get( "static" ) == "1";
-                ret.addField( buildReference( ee.elements().next(), ee.nodeName, isPublic, isStatic ) );
+
+                var ref = buildReference(ee.elements().next(), ee.nodeName, isPublic, isStatic);
+                if(ref != null)
+                    ret.addField(ref);
             }
         }
 

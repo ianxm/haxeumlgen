@@ -76,7 +76,7 @@ class HaxeUmlGen
     private static var VERSION = "0.1.6";
     
     private static var AVAILABLE_HANDLERS = {
-    	var h:Hash<Class<IOutputHandler>> = new Hash<Class<IOutputHandler>>();
+    	var h:Map<String, Class<IOutputHandler>> = new Map<String, Class<IOutputHandler>>();
     	h.set("dot", GraphvizOutputHandler);
     	h.set("xmi", XmiOutputHandler);
     	h;
@@ -85,7 +85,7 @@ class HaxeUmlGen
     /**
      * this is the main function.
      */
-        public static function main() 
+    public static function main() 
     {
         new HaxeUmlGen().run();
     }
@@ -121,8 +121,8 @@ class HaxeUmlGen
         } catch( ex : String )  
         {
             neko.Lib.println( "HaxeUmlGen Error: " + ex );
-            neko.Lib.println( "stack: " + haxe.Stack.exceptionStack() );
-            neko.Sys.exit( 1 );
+            neko.Lib.println( "stack: " + haxe.CallStack.exceptionStack() );
+            Sys.exit( 1 );
         }
     }
     
@@ -151,7 +151,7 @@ class HaxeUmlGen
      */
     private function parseArgs() 
     {
-        var args = neko.Sys.args();
+        var args = Sys.args();
         var isError = args.length<2;
         checkHelpVer( args[0], isError );
         
@@ -184,9 +184,9 @@ class HaxeUmlGen
                 inFname = aa;
             else if( aa == args[args.length - 1] ) 
             {
-                var dirName = neko.io.Path.directory(aa);
-                if( neko.FileSystem.exists( dirName ) && neko.FileSystem.isDirectory( dirName ) ) 
-                    neko.Sys.setCwd( dirName );
+                var dirName = haxe.io.Path.directory(aa);
+                if( sys.FileSystem.exists( dirName ) && sys.FileSystem.isDirectory( dirName ) ) 
+                    Sys.setCwd( dirName );
                 else
                     throw "Unknown option: " + aa;
             }
@@ -206,11 +206,11 @@ class HaxeUmlGen
         }
         
         // check data
-        if( !neko.FileSystem.exists( inFname ) ) 
+        if( !sys.FileSystem.exists( inFname ) ) 
             throw "Input file doesn't exist";        
         if( outDir.charAt( outDir.length - 1 ) == "/" || outDir.charAt( outDir.length - 1 ) == "\\" ) 
             outDir = outDir.substr( 0, outDir.length - 1 );        
-        if( !neko.FileSystem.exists( outDir ) ) 
+        if( !sys.FileSystem.exists( outDir ) ) 
             makeOutDir( outDir );        
     }
 
@@ -220,9 +220,9 @@ class HaxeUmlGen
      */
     private function makeOutDir( outDir:String ) 
     {
-        if( !neko.FileSystem.exists( outDir ) ) 
-            neko.FileSystem.createDirectory( outDir );
-        if( !neko.FileSystem.exists( outDir ) ) 
+        if( !sys.FileSystem.exists( outDir ) ) 
+            sys.FileSystem.createDirectory( outDir );
+        if( !sys.FileSystem.exists( outDir ) ) 
             throw "Couldn't create output directory: " + outDir;        
     }
 
@@ -261,19 +261,19 @@ class HaxeUmlGen
                 var printHelp:Dynamic = Reflect.field(cl, "printHelp");
                 Reflect.callMethod(cl, printHelp, []);
             }
-            neko.Sys.exit( 0 );
+            Sys.exit( 0 );
         }
         else if( aa == "-v" || aa == "--version" ) 
         {
             printInfo();
-            neko.Sys.exit( 0 );  
+            Sys.exit( 0 );  
         }
         else if( printError )
         {
             printInfo();
             log("Too few arguments");
             log("Try `HaxeUmlGen --help` for more information");      
-            neko.Sys.exit(1);
+            Sys.exit(1);
         }
     }
 
@@ -291,7 +291,7 @@ class HaxeUmlGen
     private function callHandler() 
     {
         // prepare of packages
-        var packages:Hash<Package> = new Hash<Package>();
+        var packages:Map<String, Package> = new Map<String, Package>();
         if( handler.getPackageMode() == OutputPackageMode.Flat )
         {
             for( dd in dataTypes )
@@ -321,7 +321,7 @@ class HaxeUmlGen
             	{
             		var i = 0;
                     var curPkg:Package = null;
-                    var pkgList:Hash<Package> = packages;
+                    var pkgList:Map<String, Package> = packages;
                     
                     // traverse hierarchy down
                     for( i in 0 ... parts.length )

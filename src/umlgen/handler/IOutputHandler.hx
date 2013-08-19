@@ -44,7 +44,7 @@ interface IOutputHandler
      * @param generator the generator containing the loaded settings
      * @param packages a map containing all packages which contains the datatypes 
      */
-    public function run(packages:Hash<Package>, generator:HaxeUmlGen) : Void;
+    public function run(packages:Map<String, Package>, generator:HaxeUmlGen) : Void;
     
     /**
      * Processes the specified argument

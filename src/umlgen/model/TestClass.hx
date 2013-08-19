@@ -21,9 +21,9 @@
  */
 
 package umlgen.model;
+import haxe.unit.TestCase;
 
-
-class TestClass extends haxe.unit.TestCase 
+class TestClass extends TestCase 
 {
 
     public function testClassEmpty() 

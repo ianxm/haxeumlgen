@@ -143,12 +143,12 @@ class GraphvizOutputHandler implements IOutputHandler
     {
     	try
         {
-            var ret = new neko.io.Process( "dot", [ "-V" ] );
+            var ret = new sys.io.Process( "dot", [ "-V" ] );
             ret.exitCode();
         } catch( ex : String )
         {
             neko.Lib.println( "HaxeUmlGen Error: Graphviz is not installed" );
-            neko.Sys.exit( 2 );
+            Sys.exit( 2 );
         }
     }
 
@@ -156,7 +156,7 @@ class GraphvizOutputHandler implements IOutputHandler
      * call dot.  this writes the dot input file and makes a system call to run dot.
      * @throws string if specified package isn't found or dot fails
      */
-    public function run(packages:Hash<Package>, generator:HaxeUmlGen) : Void
+    public function run(packages:Map<String, Package>, generator:HaxeUmlGen) : Void
     {
     	for( pp in packages )
         {
@@ -185,7 +185,7 @@ class GraphvizOutputHandler implements IOutputHandler
                 pp.name = "Root";
             var outExt = Std.string(imgFormat).toLowerCase();
             var outFname = generator.outDir + "/" + pp.name + "." + outExt;
-            var proc = new neko.io.Process( 'dot', [ '-T'+outExt, '-o', outFname ] );
+            var proc = new sys.io.Process( 'dot', [ '-T'+outExt, '-o', outFname ] );
             proc.stdin.writeString( buf.toString() );
             proc.stdin.close();
 
@@ -234,7 +234,7 @@ class GraphvizOutputHandler implements IOutputHandler
      */
     private function writeChxdocHtml( outDir, packageName )
     {
-        var fout = neko.io.File.write( outDir + "/" + packageName + ".html", false );
+        var fout = sys.io.File.write( outDir + "/" + packageName + ".html", false );
         fout.writeString( "<html>\n" );
         fout.writeString( "<head><title>Class Diagram for " + packageName + " Package</title></head>\n" );
         fout.writeString( "<body bgcolor=\"" + bgColor + "\">\n" );

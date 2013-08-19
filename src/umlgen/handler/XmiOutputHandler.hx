@@ -22,7 +22,7 @@
 package umlgen.handler;
 
 using StringTools;
-import neko.io.Path;
+import haxe.io.Path;
 
 import umlgen.HaxeUmlGen;
 import umlgen.model.Package;
@@ -44,7 +44,7 @@ class XmiOutputHandler implements IOutputHandler
 	/**
 	 * a list containing the generic data types to be generated 
 	 */
-	private var globalGenerics:Hash<Dynamic>;
+	private var globalGenerics:Map<String, Dynamic>;
 	
 	/**
 	 * Initializes a new instance of the XmiOutputHandler class. 
@@ -68,10 +68,10 @@ class XmiOutputHandler implements IOutputHandler
      * @param generator the generator containing the loaded settings and the logger
      * @param packages a map containing all packages which contains the datatypes 
      */
-    public function run(packages:Hash<Package>, generator:HaxeUmlGen) : Void
+    public function run(packages:Map<String, Package>, generator:HaxeUmlGen) : Void
     {
         var buf:StringBuf = new StringBuf();
-        globalGenerics = new Hash<Dynamic>();
+        globalGenerics = new Map<String, Dynamic>();
         
         // file start
         buf.add('<?xml version="1.0" encoding="UTF-8"?>');
@@ -109,7 +109,7 @@ class XmiOutputHandler implements IOutputHandler
         buf.add('</XMI>');
         
         var xmiFname:String = Path.withoutExtension(generator.outDir + "/" + Path.withoutDirectory(generator.inFname)) + "-xmi.xml";
-        var fout = neko.io.File.write( xmiFname, false );
+        var fout = sys.io.File.write( xmiFname, false );
         fout.writeString(buf.toString());
         fout.close();
         

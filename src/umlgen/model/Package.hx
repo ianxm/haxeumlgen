@@ -36,7 +36,7 @@ class Package
     /**
      * Gets the full qualified package name on hierarchical mode. 
      */
-    public var fullName(getFullName, null) : String;
+    public var fullName(get, null) : String;
     
     /**
      * a list of all data types within this package
@@ -46,7 +46,7 @@ class Package
     /**
      * a list of all subpackages (only available on hierarchical package mode)
      */
-    public var subPackages(default, null) : Hash<Package>;
+    public var subPackages(default, null) : Map<String, Package>;
     
     /**
      * the parent package
@@ -61,13 +61,13 @@ class Package
     {
     	name = pkg;
     	dataTypes = new List<ModelType>();
-    	subPackages = new Hash<Package>();
+    	subPackages = new Map<String, Package>();
     }
     
     /**
      * Gets the full qualified name on hierarchical mode.
      */
-    private function getFullName() : String
+    private function get_fullName() : String
     {
     	var fullPkg = name;
     	

@@ -46,7 +46,7 @@ class InputHandler
     public function readXml( fname ) 
     {
         var dataTypes = new List<ModelType>();
-        var fData = neko.io.File.getContent( fname );
+        var fData = sys.io.File.getContent( fname );
         var xmlData = Xml.parse( fData ).firstElement();
         for( nn in xmlData.elements() ) 
         {

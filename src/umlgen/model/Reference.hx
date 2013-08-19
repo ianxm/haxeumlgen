@@ -29,7 +29,7 @@ class Reference
     /**
      * package and type, for functions this is the return type
      */
-    public var path( default, setPath ) : String;
+    public var path( default, set ) : String;
 
     /**
      * package
@@ -90,7 +90,7 @@ class Reference
         tParams = new List<Reference>();
     }
 
-    private function setPath( path )
+    private function set_path( path )
     {
         this.path = path;
         var pathSep = Reference.separatePath( path );

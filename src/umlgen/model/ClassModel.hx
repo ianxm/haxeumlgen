@@ -81,7 +81,7 @@ class ClassModel implements ModelType
      * add a super class
      * @param p this class' parent
      */
-    public function addParent( p ) 
+    inline public function addParent( p ) 
     {
         parents.add( p );
     }
@@ -90,9 +90,10 @@ class ClassModel implements ModelType
      * add a field
      * @param f the new field
      */
-    public function addField( f ) 
+    inline public function addField( f ) 
     {
-        fields.add( f );
+        if( f != null )
+            fields.add( f );
     }
 
     /**

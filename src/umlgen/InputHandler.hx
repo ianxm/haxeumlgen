@@ -87,8 +87,8 @@ class InputHandler
         var path = xmlNode.get( "path" );
         var ret = new TypedefModel( path );
         for( ee in xmlNode.elementsNamed( "a" ).next().elements() )
-            if( ee.nodeName != "haxe_doc" ) 
-                ret.addField( buildReference( ee.elements().next(), ee.nodeName, true, false ) );
+            if( ee.nodeName != "haxe_doc" )
+                ret.addField( buildReference( ee.elements().next(), ee.nodeName, true, false) );
 
                 // trace("typedef: " + Std.string(ret));
         return ret;
@@ -111,10 +111,7 @@ class InputHandler
             {
                 var isPublic = ee.exists( "public" ) && ee.get( "public" ) == "1";
                 var isStatic = ee.exists( "static" ) && ee.get( "static" ) == "1";
-
-                var ref = buildReference(ee.elements().next(), ee.nodeName, isPublic, isStatic);
-                if(ref != null)
-                    ret.addField(ref);
+                ret.addField( buildReference(ee.elements().next(), ee.nodeName, isPublic, isStatic) );
             }
         }
 
@@ -136,6 +133,7 @@ class InputHandler
             case "a": return new Reference( name, "Anonymous", false, isPublic, isStatic );
             case "unknown": return new Reference( name, "Unknown", false, isPublic, isStatic );
             case "f": return buildFuncRef( node, name, isPublic, isStatic );
+            case "x": return new Reference( name, node.get( "path" ), isPublic, isStatic );
         }
         return null;
     }
@@ -163,7 +161,7 @@ class InputHandler
         {
             var pname = pnames.next();
             if( pname == "" ) 
-                break;            
+                break;
             ref.addParam( buildReference( params.next(), pname, false, false ) );
         }
         var ret = params.next();                            // set return type

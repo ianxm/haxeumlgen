@@ -105,7 +105,8 @@ class Reference
      */
     inline public function addParam( r ) 
     {
-        params.add( r );
+        if( r != null )
+            params.add( r );
     }
 
     /**

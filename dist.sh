@@ -8,7 +8,7 @@ if [ -e HaxeUmlGen.zip ]; then
     rm HaxeUmlGen.zip
 fi
 
-cp -r haxelib.xml bin/* LICENSE README dist
+cp -r haxelib.json bin/* LICENSE README dist
 cd src
 cp -r umlgen ../dist
 cd ../dist

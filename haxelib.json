@@ -1,0 +1,13 @@
+{
+  "name": "HaxeUmlGen",
+  "license": "BSD",
+  "tags": ["cross"],
+  "description": "This tool dynamically generates uml for a haXe project",
+  "contributors": ["ianxm"],
+  "releasenote": "updated to haxe3 with patch from itavero",
+  "version": "0.2.0",
+  "url": "http://github.com/ianxm/haxeumlgen",
+  "dependencies": {
+
+  }
+}

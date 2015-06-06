@@ -69,8 +69,18 @@ class Reference
     /**
      * list of params if this is a function
      */
-    public var params( default, null ) : List<Reference>;
+    public var params( default, null ) : List<Reference>;	
+	
+	public var valueGet:String;
+	public var valueSet:String;
+	public var isPublic:Bool;
+	public var defaultValue:String;
 
+	public function toString():String
+	{
+		return this.name + " " + this.type + " " + this.pkg;
+	}
+	
     /**
      * constructor
      * @param n name

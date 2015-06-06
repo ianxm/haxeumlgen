@@ -111,7 +111,18 @@ class InputHandler
             {
                 var isPublic = ee.exists( "public" ) && ee.get( "public" ) == "1";
                 var isStatic = ee.exists( "static" ) && ee.get( "static" ) == "1";
-                ret.addField( buildReference(ee.elements().next(), ee.nodeName, isPublic, isStatic) );
+                var valueGet = ee.exists( "get" ) ? ee.get( "get" ) : null;
+                var valueSet = ee.exists( "set" ) ? ee.get( "set" ) : null;				
+				
+				var ref:Reference = buildReference(ee.elements().next(), ee.nodeName, isPublic, isStatic);
+				
+				if( ref != null )
+				{					
+					ref.valueGet = valueGet;
+					ref.valueSet = valueSet;
+				}
+				
+                ret.addField( ref );
             }
         }
 
@@ -127,13 +138,27 @@ class InputHandler
         switch( node.nodeName ) 
         {
             case "e": return new Reference( name, node.get( "path" ), false, isPublic, isStatic );
-            case "t": return new Reference( name, node.get( "path" ), false, isPublic, isStatic );
+			case "t": 
+			{
+				var tref = new Reference( name, node.get( "path" ), false, isPublic, isStatic );
+				var params = node.elements();
+			 
+				if( params != null && tref != null )
+				{
+					while( params.hasNext() ) 
+					{					
+						tref.addTParam( buildReference( params.next(), "", false, false ) );
+					}
+				}
+				
+				return tref;
+			}
             case "c": return buildClassRef( node, name, isPublic, isStatic );
             case "d": return new Reference( name, "Dynamic", false, isPublic, isStatic );
             case "a": return new Reference( name, "Anonymous", false, isPublic, isStatic );
             case "unknown": return new Reference( name, "Unknown", false, isPublic, isStatic );
             case "f": return buildFuncRef( node, name, isPublic, isStatic );
-            case "x": return new Reference( name, node.get( "path" ), isPublic, isStatic );
+            case "x": return new Reference( name, node.get( "path" ), false, isPublic, isStatic );
         }
         return null;
     }
@@ -155,23 +180,42 @@ class InputHandler
     private function buildFuncRef( node : Xml, name, isPublic, isStatic ) 
     {
         var ref = new Reference( name, null, true, isPublic, isStatic );
+		
+        var vnames = node.exists( "v" ) ? node.get( "v" ).split( ":" ) : null;
         var pnames = node.get( "a" ).split( ":" ).iterator();
         var params = node.elements();
+		
+		var count:Int = -1;
+		
         while( pnames.hasNext() ) 
         {
+			count++;
+			
             var pname = pnames.next();
             if( pname == "" ) 
                 break;
-            ref.addParam( buildReference( params.next(), pname, false, false ) );
+			
+			var defval = "";
+			
+			if( vnames != null )	
+				defval = vnames[count];
+				
+			var refparam = buildReference( params.next(), pname, false, false );	
+				
+			if( defval != "" )
+				refparam.defaultValue = defval;
+			
+            ref.addParam( refparam );			
         }
+		
         var ret = params.next();                            // set return type
         switch( ret.nodeName )
         {
-        case "e","t","c": ref.path = ret.get( "path" );
-        case "d": ref.path = "Dynamic";
-        case "a": ref.path = "Anonymous";
-        case "unknown": ref.path = "Unknown";
-        case "f": ref.path = "function";
+			case "e","t","c","x": ref.path = ret.get( "path" );
+			case "d": ref.path = "Dynamic";
+			case "a": ref.path = "Anonymous";
+			case "unknown": ref.path = "Unknown";
+			case "f": ref.path = "function";
         }
         return ref;
     }

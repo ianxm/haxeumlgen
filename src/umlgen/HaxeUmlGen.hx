@@ -23,6 +23,7 @@
 package umlgen;
 
 using StringTools;
+import umlgen.handler.Xmi2OutputHandler;
 import umlgen.model.ModelType;
 import umlgen.model.Package;
 import umlgen.handler.IOutputHandler;
@@ -73,12 +74,13 @@ class HaxeUmlGen
     /**
      * current app version
      */
-    private static var VERSION = "0.1.6";
+    public static var VERSION = "0.2.6";
     
     private static var AVAILABLE_HANDLERS = {
     	var h:Map<String, Class<IOutputHandler>> = new Map<String, Class<IOutputHandler>>();
     	h.set("dot", GraphvizOutputHandler);
     	h.set("xmi", XmiOutputHandler);
+    	h.set("xmi2", Xmi2OutputHandler);
     	h;
     }
 

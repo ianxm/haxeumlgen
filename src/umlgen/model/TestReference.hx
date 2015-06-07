@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2009, Ian Martins
+ * Copyright (c) 2009-2015, haxeumlgen contrubuters
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * - Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  * - Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE HAXE PROJECT CONTRIBUTORS
@@ -23,31 +23,31 @@
 package umlgen.model;
 
 
-class TestReference extends haxe.unit.TestCase 
+class TestReference extends haxe.unit.TestCase
 {
 
-    public function testReferenceVarInt() 
+    public function testReferenceVarInt()
     {
         var field = new Reference( "aField", "Int", false, false );
         assertEquals( "- aField : Int\\l", field.getFieldStr() );
         assertEquals( "aField : Int", field.getParamStr() );
     }
 
-    public function testReferenceVarCar() 
+    public function testReferenceVarCar()
     {
         var field = new Reference( "anotherField", "Car", false, true );
         assertEquals( "+ anotherField : Car\\l", field.getFieldStr() );
         assertEquals( "anotherField : Car", field.getParamStr() );
     }
 
-    public function testReferenceFuncEmpty() 
+    public function testReferenceFuncEmpty()
     {
         var field = new Reference( "aFunc", "Foo", true, false );
         assertEquals( "- aFunc () : Foo\\l", field.getFieldStr() );
         assertEquals( "aFunc () : Foo", field.getParamStr() );
     }
 
-    public function testReferenceFuncOne() 
+    public function testReferenceFuncOne()
     {
         var field = new Reference( "aFunc", "some.Foo", true, false );
         field.addParam( new Reference( "aParam", "some.Int" ) );
@@ -55,7 +55,7 @@ class TestReference extends haxe.unit.TestCase
         assertEquals( "aFunc (aParam : some.Int) : some.Foo", field.getParamStr() );
     }
 
-    public function testReferenceFuncTwo() 
+    public function testReferenceFuncTwo()
     {
         var field = new Reference( "aFunc", "Foo", true, false );
         field.addParam( new Reference( "aParam", "Int" ) );

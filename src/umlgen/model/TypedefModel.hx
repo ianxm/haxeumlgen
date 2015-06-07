@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2009, Ian Martins
+ * Copyright (c) 2009-2015, haxeumlgen contrubuters
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * - Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  * - Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE HAXE PROJECT CONTRIBUTORS
@@ -25,7 +25,7 @@ package umlgen.model;
 /**
  * a typedef
  */
-class TypedefModel implements ModelType 
+class TypedefModel implements ModelType
 {
     /**
      * package and type, for functions this is the return type
@@ -47,7 +47,7 @@ class TypedefModel implements ModelType
      * constructor
      * @param p path (package and type name)
      */
-    public function new( p ) 
+    public function new( p )
     {
         path = p;
         var pathSep = Reference.separatePath( path );
@@ -60,7 +60,7 @@ class TypedefModel implements ModelType
      * add a field
      * @param f the new field
      */
-    public function addField( f ) 
+    public function addField( f )
     {
         fields.add( f );
     }
@@ -69,7 +69,7 @@ class TypedefModel implements ModelType
      * output this type as a dot string
      * @return dot statement
      */
-    public function getDotStr() : String 
+    public function getDotStr() : String
     {
         var sep = path.lastIndexOf( "." );
         var name = ( sep == -1 ) ? path : path.substr( sep + 1, path.length - sep - 1 );
@@ -80,7 +80,7 @@ class TypedefModel implements ModelType
      * output the params as a dot string
      * @return dot expression
      */
-    private function getFields() : String 
+    private function getFields() : String
     {
         var strBuf = new StringBuf();
         for( ff in fields )

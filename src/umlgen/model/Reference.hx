@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2009, Ian Martins
+ * Copyright (c) 2009-2015, haxeumlgen contrubuters
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * - Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  * - Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE HAXE PROJECT CONTRIBUTORS
@@ -24,7 +24,7 @@ package umlgen.model;
 
 import umlgen.HaxeUmlGen;
 
-class Reference 
+class Reference
 {
     /**
      * package and type, for functions this is the return type
@@ -69,18 +69,18 @@ class Reference
     /**
      * list of params if this is a function
      */
-    public var params( default, null ) : List<Reference>;	
-	
-	public var valueGet:String;
-	public var valueSet:String;
-	public var isPublic:Bool;
-	public var defaultValue:String;
+    public var params( default, null ) : List<Reference>;
 
-	public function toString():String
-	{
-		return this.name + " " + this.type + " " + this.pkg;
-	}
-	
+    public var valueGet:String;
+    public var valueSet:String;
+    public var isPublic:Bool;
+    public var defaultValue:String;
+
+    public function toString():String
+    {
+        return this.name + " " + this.type + " " + this.pkg;
+    }
+
     /**
      * constructor
      * @param n name
@@ -89,7 +89,7 @@ class Reference
      * @param s if true, static
      * @param pr protection
      */
-    public function new( n, p, ?f = false, ?pr = false, ?s = false ) 
+    public function new( n, p, ?f = false, ?pr = false, ?s = false )
     {
         name = n;
         path = p;
@@ -113,7 +113,7 @@ class Reference
      * add a param
      * @param r new param
      */
-    inline public function addParam( r ) 
+    inline public function addParam( r )
     {
         if( r != null )
             params.add( r );
@@ -123,7 +123,7 @@ class Reference
      * add a type param
      * @param r new type param
      */
-    inline public function addTParam( r ) 
+    inline public function addTParam( r )
     {
         tParams.add( r );
     }
@@ -132,8 +132,8 @@ class Reference
      * output this type as a function parameter
      * @return dot expression for a parameter
      */
-    public function getParamStr() : String 
-    { 
+    public function getParamStr() : String
+    {
         var type = ( pkg == HaxeUmlGen.pkg ) ? type : path;
         return name + getFuncParams() + " : " + type + getTParamsStr();
     }
@@ -143,7 +143,7 @@ class Reference
      * @return dot expression for a field
      * @todo underline statics
      */
-    public function getFieldStr() : String 
+    public function getFieldStr() : String
     {
         var type = ( pkg == HaxeUmlGen.pkg ) ? type : path;
         return protection + " " + name + getFuncParams() + " : " + type + getTParamsStr() + "\\l";
@@ -153,18 +153,18 @@ class Reference
      * get type params for field str
      * @return dot expression for a type parameter
      */
-    private function getTParamsStr() : String 
+    private function getTParamsStr() : String
     {
-        if( tParams.isEmpty() ) 
-            return "";        
+        if( tParams.isEmpty() )
+            return "";
         var strBuf = new StringBuf();
         strBuf.add( "\\<" );
-        for( pp in tParams ) 
+        for( pp in tParams )
         {
             var type = ( pp.pkg == HaxeUmlGen.pkg ) ? pp.type : pp.path;
             strBuf.add( type );
-            if( pp != tParams.last() ) 
-                strBuf.add( ", " );            
+            if( pp != tParams.last() )
+                strBuf.add( ", " );
         }
         strBuf.add( "\\>" );
         return strBuf.toString();
@@ -174,19 +174,19 @@ class Reference
      * output the params as a dot string
      * @return dot expression for a function param
      */
-    public function getFuncParams() : String 
+    public function getFuncParams() : String
     {
-        if( !isFunc ) 
-            return "";        
+        if( !isFunc )
+            return "";
         var strBuf = new StringBuf();
         strBuf.add( " (" );
         for( pp in params )
-            if( pp != params.last() ) 
+            if( pp != params.last() )
                 strBuf.add( pp.getParamStr() + ", " );
             else
                 strBuf.add( pp.getParamStr() );
         strBuf.add( ")" );
-        
+
         return strBuf.toString();
     }
 
@@ -195,7 +195,7 @@ class Reference
      * @param p package name
      * @return list of types in the package
      */
-    public function inPkg( p : String ) : List<Reference> 
+    public function inPkg( p : String ) : List<Reference>
     {
         var ret = new List<Reference>();
 
@@ -205,14 +205,14 @@ class Reference
                 ret.add( pp2 );
 
         // check params
-        if( isFunc ) 
+        if( isFunc )
             for( pp in params )
                 for( pp2 in pp.inPkg( p ) )
                     ret.add( pp2 );
 
         // check me
-        if( p == pkg ) 
-            ret.add( this );        
+        if( p == pkg )
+            ret.add( this );
         return ret;
     }
 
@@ -221,11 +221,11 @@ class Reference
      * @param path the full path
      * @return package and type names
      */
-    public static function separatePath( path : String ) 
+    public static function separatePath( path : String )
     {
-        if( path == null ) 
-            return 
-            { pkg : null, type : null };        
+        if( path == null )
+            return
+            { pkg : null, type : null };
         var sep = path.lastIndexOf( "." );
         var pkg = ( sep == -1 ) ? "" : path.substr( 0, sep );
         var type = ( sep == -1 ) ? path : path.substr( sep + 1, path.length - sep - 1 );

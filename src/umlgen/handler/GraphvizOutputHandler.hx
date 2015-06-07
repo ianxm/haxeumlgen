@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2011, Ian Martins and Daniel Kuschny
+ * Copyright (c) 2009-2015, haxeumlgen contrubuters
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -63,7 +63,7 @@ class GraphvizOutputHandler implements IOutputHandler
      */
     public function new()
     {
-    	bgColor = "white";
+        bgColor = "white";
         fgColor = "black";
         imgFormat = PNG;
         forChxdoc = false;
@@ -79,34 +79,34 @@ class GraphvizOutputHandler implements IOutputHandler
      */
     public function processArg(arg:String, args:Iterator<String>, generator:HaxeUmlGen) : Bool
     {
-    	if( arg == "-b" )
-    	{
-    		bgColor = args.next();
-    		if( !bgColor.startsWith("#"))
+        if( arg == "-b" )
+        {
+            bgColor = args.next();
+            if( !bgColor.startsWith("#"))
                 bgColor = "#" + bgColor;
-    		return true;
-    	}
-    	else if( arg.indexOf("--bgcolor=") != -1 )
-    	{
+            return true;
+        }
+        else if( arg.indexOf("--bgcolor=") != -1 )
+        {
             bgColor = arg.substr(10);
             if( !bgColor.startsWith("#"))
                 bgColor = "#" + bgColor;
-    		return true;
-    	}
-    	else if( arg == "-f" )
-    	{
-    		fgColor = args.next();
-    		 if( !fgColor.startsWith("#"))
+            return true;
+        }
+        else if( arg == "-f" )
+        {
+            fgColor = args.next();
+             if( !fgColor.startsWith("#"))
                 fgColor = "#" + fgColor;
-    		return true;
-    	}
-    	else if( arg.indexOf("--fgcolor=") != -1 )
-    	{
+            return true;
+        }
+        else if( arg.indexOf("--fgcolor=") != -1 )
+        {
             fgColor = arg.substr(10);
             if( !fgColor.startsWith("#"))
                 fgColor = "#" + fgColor;
-    		return true;
-    	}
+            return true;
+        }
         else if( arg == "-i" )
         {
             var formatStr = args.next().toUpperCase();
@@ -127,13 +127,13 @@ class GraphvizOutputHandler implements IOutputHandler
             }
             return true;
         }
-    	else if( arg == "-c" || arg == "--chxdoc" )
+        else if( arg == "-c" || arg == "--chxdoc" )
         {
             forChxdoc = true;
             return true;
         }
 
-    	return false;
+        return false;
     }
 
     /**
@@ -141,7 +141,7 @@ class GraphvizOutputHandler implements IOutputHandler
      */
     public function checkRequirements(generator:HaxeUmlGen) : Void
     {
-    	try
+        try
         {
             var ret = new sys.io.Process( "dot", [ "-V" ] );
             ret.exitCode();
@@ -158,7 +158,7 @@ class GraphvizOutputHandler implements IOutputHandler
      */
     public function run(packages:Map<String, Package>, generator:HaxeUmlGen) : Void
     {
-    	for( pp in packages )
+        for( pp in packages )
         {
             HaxeUmlGen.pkg = pp.name;
             var boxes = pp.dataTypes;
@@ -216,7 +216,7 @@ class GraphvizOutputHandler implements IOutputHandler
      */
     public static function getDescription() : String
     {
-    	return "generate a image using Graphviz";
+        return "generate a image using Graphviz";
     }
 
     /**
@@ -224,7 +224,7 @@ class GraphvizOutputHandler implements IOutputHandler
      */
     public function getPackageMode() : OutputPackageMode
     {
-    	return OutputPackageMode.Flat;
+        return OutputPackageMode.Flat;
     }
 
     /**

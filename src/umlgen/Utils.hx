@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2009-2011, Ian Martins and Daniel Kuschny
+ * Copyright (c) 2009-2015, haxeumlgen contrubuters
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * - Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  * - Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED. IN NO EVENT SHALL THE HAXE PROJECT CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
@@ -25,19 +25,19 @@ package umlgen;
 import Type;
 
 /**
- * A class containing utility functions for umlgen. 
+ * A class containing utility functions for umlgen.
  */
-class Utils 
+class Utils
 {
     /**
      * find first item in an iterable. return null if it doesn't exist.
      * sort of like it.filter(f).first() but doesn't have to go through the whole list.
      */
-    public static function findFirst<A>( it : Iterable<A>, f : A -> Bool ) : A 
+    public static function findFirst<A>( it : Iterable<A>, f : A -> Bool ) : A
     {
         for( ii in it )
-            if( f( ii ) ) 
-                return ii;            
+            if( f( ii ) )
+                return ii;
         return null;
     }
 }

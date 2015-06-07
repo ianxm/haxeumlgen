@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2009, Ian Martins
+ * Copyright (c) 2009-2015, haxeumlgen contrubuters
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * - Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  * - Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE HAXE PROJECT CONTRIBUTORS
@@ -29,7 +29,7 @@ import umlgen.Utils;
 /**
  * a class
  */
-class ClassModel implements ModelType 
+class ClassModel implements ModelType
 {
     /**
      * package and class name
@@ -66,7 +66,7 @@ class ClassModel implements ModelType
      * @param p the class' path (package and class name)
      * @param i if true, this is an interface
      */
-    public function new( p, i ) 
+    public function new( p, i )
     {
         path = p;
         var pathSep = Reference.separatePath( path );
@@ -81,7 +81,7 @@ class ClassModel implements ModelType
      * add a super class
      * @param p this class' parent
      */
-    inline public function addParent( p ) 
+    inline public function addParent( p )
     {
         parents.add( p );
     }
@@ -90,7 +90,7 @@ class ClassModel implements ModelType
      * add a field
      * @param f the new field
      */
-    inline public function addField( f ) 
+    inline public function addField( f )
     {
         if( f != null )
             fields.add( f );
@@ -100,19 +100,19 @@ class ClassModel implements ModelType
      * output the class in dot format.  this also connects it to others
      * @return dot statements for this class
      */
-    public function getDotStr() : String 
+    public function getDotStr() : String
     {
         var strBuf = new StringBuf();
         var topBox = ( isInterface ) ? '\\<interface\\>\\n' + type : type;
         strBuf.add( '\t "' + path + '" [ label = "{' + topBox + '|' + getFieldsDotStr() + '|' + getMethodsDotStr() + '}" ]\n' );
-        if( !parents.isEmpty() ) 
+        if( !parents.isEmpty() )
         {
             strBuf.add( '\t  edge [ arrowhead = "empty" ]\n' );
             for( pp in parents )
                 strBuf.add( '\t  "' + path + '" -> "' + pp.path + '"\n' );
         }
         var assoc = findAssociations();
-        if( !assoc.isEmpty() ) 
+        if( !assoc.isEmpty() )
         {
             strBuf.add( '\t  edge [ arrowhead = "none" ]\n' );
             for( aa in assoc )
@@ -125,7 +125,7 @@ class ClassModel implements ModelType
      * output the fields as a dot string
      * @return dot expression for all fields
      */
-    private function getFieldsDotStr() : String 
+    private function getFieldsDotStr() : String
     {
         var strBuf = new StringBuf();
         var isInherited = this.isInherited;
@@ -140,7 +140,7 @@ class ClassModel implements ModelType
      * output the methods as a dot string
      * @return dot expression for all methods
      */
-    private function getMethodsDotStr() : String 
+    private function getMethodsDotStr() : String
     {
         var strBuf = new StringBuf();
         var isInherited = this.isInherited;
@@ -154,17 +154,17 @@ class ClassModel implements ModelType
     /**
      * @return true if this field is inherited from a parent
      */
-    private function isInherited( ref : Reference ) 
+    private function isInherited( ref : Reference )
     {
-        for( pp in parents ) 
+        for( pp in parents )
         {
             var pobj = Utils.findFirst( HaxeUmlGen.dataTypes, function(dd) return dd.path==pp.path );
-            if( pobj == null ) 
-                throw "parent not found";            
-            if( !Std.is( pobj, ClassModel ) ) 
-                throw "parent not class";            
-            if( cast( pobj, ClassModel ).hasRef( ref ) ) 
-                return true;            
+            if( pobj == null )
+                throw "parent not found";
+            if( !Std.is( pobj, ClassModel ) )
+                throw "parent not class";
+            if( cast( pobj, ClassModel ).hasRef( ref ) )
+                return true;
         }
         return false;
     }
@@ -173,7 +173,7 @@ class ClassModel implements ModelType
      * find out if this class has the given reference
      * @return true if this class has the given field
      */
-    public function hasRef( ref : Reference ) 
+    public function hasRef( ref : Reference )
     {
         return fields.exists( function(ff) return ff.name == ref.name );
     }
@@ -182,10 +182,10 @@ class ClassModel implements ModelType
      * find out which data types this class is associated with
      * @return list of references of associated data types
      */
-    private function findAssociations() 
+    private function findAssociations()
     {
         var assoc = new List<Reference>();
-        for( rr in fields ) 
+        for( rr in fields )
         {
             // add fields and field type params, only add each reference once
             for( aa in rr.inPkg( HaxeUmlGen.pkg ) )

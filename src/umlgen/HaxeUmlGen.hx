@@ -74,7 +74,7 @@ class HaxeUmlGen
     /**
      * current app version
      */
-    public static var VERSION = "0.1.7";
+    public static var VERSION = "0.2.1";
 
     private static var AVAILABLE_HANDLERS = {
         var h:Map<String, Class<IOutputHandler>> = new Map<String, Class<IOutputHandler>>();

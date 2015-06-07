@@ -3,7 +3,7 @@
   "license": "BSD",
   "tags": ["cross","utility"],
   "description": "This tool dynamically generates uml for a haXe project",
-  "contributors": ["ianxm", "Danielku15", "db", "misprintt", "itavero", "ScrambledRK"],
+  "contributors": ["ianxm"],
   "releasenote": "xmi 2.1 support",
   "version": "0.2.1",
   "url": "http://github.com/ianxm/haxeumlgen",
